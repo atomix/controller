@@ -3,6 +3,6 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/gojp/goreportcard/blob/master/LICENSE)
 [![GoDoc](https://godoc.org/github.com/atomix/controller?status.svg)](https://godoc.org/github.com/atomix/controller)
 
-# Atomix Runtime Engine
+# Atomix Kubernetes Controller
 
-Runtime controller for Atomix Cloud
+Kubernetes controller for Atomix Cloud runtime.
