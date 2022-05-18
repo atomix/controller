@@ -21,3 +21,5 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build
         run: make build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

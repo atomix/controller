@@ -4,7 +4,7 @@
 
 project_name: atomix-controller-bin
 
-dist: dist/controller/bin
+dist: dist/bin
 
 before:
   hooks:

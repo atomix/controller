@@ -10,6 +10,6 @@ RUN addgroup -S atomix && adduser -S -G atomix atomix
 
 USER atomix
 
-COPY dist/proxy/bin/atomix-proxy_linux_amd64_v1/atomix-proxy /usr/local/bin/atomix-proxy
+COPY dist/bin/atomix-controller_linux_amd64_v1/atomix-controller /usr/local/bin/atomix-controller
 
-ENTRYPOINT ["atomix-proxy"]
+ENTRYPOINT ["atomix-controller"]

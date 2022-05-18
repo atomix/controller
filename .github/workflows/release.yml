@@ -24,3 +24,5 @@ jobs:
           echo 'GITHUB_TOKEN=${{secrets.GH_TOKEN}}' > .release-env
       - name: Release
         run: make release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

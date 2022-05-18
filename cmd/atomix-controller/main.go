@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/atomix/engine/pkg/apis"
+	sidecarv3beta1 "github.com/atomix/engine/pkg/controller/sidecar/v3beta1"
 	"github.com/atomix/engine/pkg/controller/util/k8s"
 	"github.com/atomix/runtime/pkg/logging"
 	"os"
@@ -65,17 +66,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Add all the controllers
+	if err := sidecarv3beta1.AddControllers(mgr); err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
 	/*
-		// Add all the controllers
 		if err := corev2beta1.AddControllers(mgr); err != nil {
 			log.Error(err)
 			os.Exit(1)
 		}
 		if err := primitivesv2beta1.AddControllers(mgr); err != nil {
-			log.Error(err)
-			os.Exit(1)
-		}
-		if err := sidecarv2beta1.AddControllers(mgr); err != nil {
 			log.Error(err)
 			os.Exit(1)
 		}
