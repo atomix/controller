@@ -1,4 +1,4 @@
-module github.com/atomix/engine
+module github.com/atomix/controller
 
 go 1.18
 

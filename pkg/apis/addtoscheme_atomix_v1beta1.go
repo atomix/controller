@@ -5,7 +5,7 @@
 package apis
 
 import (
-	atomixv1beta1 "github.com/atomix/engine/pkg/apis/atomix/v1beta1"
+	atomixv1beta1 "github.com/atomix/controller/pkg/apis/atomix/v1beta1"
 )
 
 func init() {

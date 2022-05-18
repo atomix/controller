@@ -7,9 +7,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/atomix/engine/pkg/apis"
-	sidecarv3beta1 "github.com/atomix/engine/pkg/controller/sidecar/v3beta1"
-	"github.com/atomix/engine/pkg/controller/util/k8s"
+	"github.com/atomix/controller/pkg/apis"
+	sidecarv3beta1 "github.com/atomix/controller/pkg/controller/sidecar/v3beta1"
+	"github.com/atomix/controller/pkg/controller/util/k8s"
 	"github.com/atomix/runtime/pkg/logging"
 	"os"
 	"runtime"
