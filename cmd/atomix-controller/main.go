@@ -8,9 +8,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/atomix/controller/pkg/apis"
-	sidecarv3beta1 "github.com/atomix/controller/pkg/controller/sidecar/v3beta1"
+	corev3beta1 "github.com/atomix/controller/pkg/controller/atomix/v3beta1"
 	"github.com/atomix/controller/pkg/controller/util/k8s"
-	"github.com/atomix/runtime/pkg/logging"
+	"github.com/atomix/runtime/pkg/atomix/logging"
 	"os"
 	"runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -67,20 +67,10 @@ func main() {
 	}
 
 	// Add all the controllers
-	if err := sidecarv3beta1.AddControllers(mgr); err != nil {
+	if err := corev3beta1.AddControllers(mgr); err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
-	/*
-		if err := corev2beta1.AddControllers(mgr); err != nil {
-			log.Error(err)
-			os.Exit(1)
-		}
-		if err := primitivesv2beta1.AddControllers(mgr); err != nil {
-			log.Error(err)
-			os.Exit(1)
-		}
-	*/
 
 	// Start the manager
 	log.Info("Starting the Manager")

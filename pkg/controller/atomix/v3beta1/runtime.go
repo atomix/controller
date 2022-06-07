@@ -32,11 +32,14 @@ const (
 	runtimeInjectStatusAnnotation = "runtime.atomix.io/status"
 	atomixReadyCondition          = "AtomixReady"
 	injectedStatus                = "injected"
+	runtimeContainerName          = "atomix-runtime"
+	controlPortName               = "control"
 )
 
 const (
 	defaultRuntimeImageEnv = "DEFAULT_RUNTIME_IMAGE"
 	defaultRuntimeImage    = "atomix/atomix-runtime:latest"
+	defaultControlPort     = 5679
 )
 
 func getDefaultRuntimeImage() string {
@@ -105,7 +108,7 @@ func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request)
 	}
 
 	pod.Spec.Containers = append(pod.Spec.Containers, corev1.Container{
-		Name:            "atomix-runtime",
+		Name:            runtimeContainerName,
 		Image:           getDefaultRuntimeImage(),
 		ImagePullPolicy: corev1.PullIfNotPresent,
 		Env: []corev1.EnvVar{
@@ -132,6 +135,12 @@ func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request)
 						FieldPath: "spec.nodeName",
 					},
 				},
+			},
+		},
+		Ports: []corev1.ContainerPort{
+			{
+				Name:          controlPortName,
+				ContainerPort: defaultControlPort,
 			},
 		},
 	})

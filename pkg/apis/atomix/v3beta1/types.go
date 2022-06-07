@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package v1beta1
+package v3beta1
 
 import (
 	corev1 "k8s.io/api/core/v1"
@@ -50,22 +50,16 @@ type Driver struct {
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Application is a specification for a Application resource
-type Application struct {
+// Binding is a specification for a Binding resource
+type Binding struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ApplicationSpec   `json:"spec"`
-	Status ApplicationStatus `json:"status"`
+	Spec BindingSpec `json:"spec"`
 }
 
-// ApplicationSpec is the spec for a Application resource
-type ApplicationSpec struct {
-	Driver Driver               `json:"driver,omitempty"`
-	Config runtime.RawExtension `json:"config,omitempty"`
-}
-
-type Binding struct {
+// BindingSpec is the spec for a Binding resource
+type BindingSpec struct {
 	Cluster corev1.ObjectReference `json:"cluster,omitempty"`
 	Rules   []BindingRule          `json:"rules,omitempty"`
 }
@@ -76,16 +70,12 @@ type BindingRule struct {
 	Metadata map[string]string `json:"metadata"`
 }
 
-// ApplicationStatus is the status for a Application resource
-type ApplicationStatus struct {
-}
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ApplicationList is a list of Application resources
-type ApplicationList struct {
+// BindingList is a list of Binding resources
+type BindingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 
-	Items []Application `json:"items"`
+	Items []Binding `json:"items"`
 }
