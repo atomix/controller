@@ -24,8 +24,8 @@ type Cluster struct {
 
 // ClusterSpec is the spec for a Cluster resource
 type ClusterSpec struct {
-	Engine StorageEngineReference `json:"engine,omitempty"`
-	Config runtime.RawExtension   `json:"config,omitempty"`
+	Driver Driver               `json:"driver,omitempty"`
+	Config runtime.RawExtension `json:"config,omitempty"`
 }
 
 // ClusterStatus is the status for a Cluster resource
@@ -42,30 +42,50 @@ type ClusterList struct {
 	Items []Cluster `json:"items"`
 }
 
-// StorageEngineReference is a reference to a runtime engine
-type StorageEngineReference struct {
-	corev1.ObjectReference `json:",inline"`
+type Driver struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
 }
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type Driver struct {
+// Application is a specification for a Application resource
+type Application struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Repo DriverRepo `json:"repo,omitempty"`
+	Spec   ApplicationSpec   `json:"spec"`
+	Status ApplicationStatus `json:"status"`
 }
 
-type DriverRepo struct {
-	URL string `json:"url"`
+// ApplicationSpec is the spec for a Application resource
+type ApplicationSpec struct {
+	Driver Driver               `json:"driver,omitempty"`
+	Config runtime.RawExtension `json:"config,omitempty"`
+}
+
+type Binding struct {
+	Cluster corev1.ObjectReference `json:"cluster,omitempty"`
+	Rules   []BindingRule          `json:"rules,omitempty"`
+}
+
+type BindingRule struct {
+	Kinds    []string          `json:"kinds,omitempty"`
+	Names    []string          `json:"names,omitempty"`
+	Metadata map[string]string `json:"metadata"`
+}
+
+// ApplicationStatus is the status for a Application resource
+type ApplicationStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type DriverList struct {
+// ApplicationList is a list of Application resources
+type ApplicationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 
-	Items []Driver `json:"items"`
+	Items []Application `json:"items"`
 }

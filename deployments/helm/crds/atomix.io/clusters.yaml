@@ -32,23 +32,20 @@ spec:
                 cluster should be implemented.
               type: object
               properties:
-                engine:
+                driver:
                   type: object
+                  required:
+                    - name
+                    - version
                   properties:
                     name:
                       type: string
+                    version:
+                      type: string
                 config:
                   description: |-
-                    The configuration for the engine to be used to run the cluster.
+                    The configuration for the runtime driver.
                   type: object
-                  x-kubernetes-preserve-unknown-fields: true
-                protocol:
-                  description: |-
-                    The configuration for the protocol to be used to implement the cluster. The protocol is a complete
-                    Kubernetes resource configuration, including the 'apiVersion' and 'kind'. The protocol kind must
-                    match a custom resource defined by one of the StoragePlugins.
-                  type: object
-                  x-kubernetes-embedded-resource: true
                   x-kubernetes-preserve-unknown-fields: true
             status:
               type: object

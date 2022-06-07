@@ -14,7 +14,7 @@ helm install atomix-controller .
 ```
 
 ```bash
-helm install atomix-runtime .
+helm install atomix-primitive .
 ```
 
 [Helm]: https://helm.sh/

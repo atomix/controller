@@ -38,7 +38,7 @@ var (
 // Adds the list of known types to Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion, &Cluster{}, &ClusterList{})
-	scheme.AddKnownTypes(SchemeGroupVersion, &Driver{}, &DriverList{})
+	scheme.AddKnownTypes(SchemeGroupVersion, &Application{}, &ApplicationList{})
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil
 }
