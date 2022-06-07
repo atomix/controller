@@ -11,7 +11,7 @@ version: 0.6.9
 appVersion: v0.6.2
 keywords:
 - atomix
-home: https://cloud.atomix.io
+home: https://atomix.io
 maintainers:
 - name: Jordan Halterman
   email: jordan.halterman@intel.com
