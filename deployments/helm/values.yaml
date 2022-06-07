@@ -19,20 +19,3 @@ init:
     tag: v0.1.0
     pullPolicy: IfNotPresent
     pullSecrets: []
-
-registry:
-  image:
-    registry: ""
-    repository: atomix/atomix-plugin-registry
-    tag: v0.1.0
-    pullPolicy: IfNotPresent
-    pullSecrets: []
-
-compiler:
-  v1:
-    image:
-      registry: ""
-      repository: atomix/atomix-plugin-compiler
-      tag: v0.1.0
-      pullPolicy: IfNotPresent
-      pullSecrets: []

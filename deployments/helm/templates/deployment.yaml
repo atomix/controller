@@ -94,41 +94,8 @@ spec:
         - name: config
           mountPath: /etc/atomix/config
           readOnly: true
-      - name: atomix-plugin-registry
-        image: {{ include "atomix-runtime.imagename" .Values.registry.image | quote }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        args:
-        - --port=5679
-        - --compiler
-        - v1=5690
-        ports:
-        - containerPort: 5679
-          name: registry
-        volumeMounts:
-        - name: plugins
-          mountPath: /plugins
-          readOnly: true
-        - name: config
-          mountPath: /etc/atomix/config
-          readOnly: true
-      - name: atomix-plugin-compiler-v1
-        image: {{ include "atomix-runtime.imagename" .Values.compiler.v1.image | quote }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        args:
-        - --port=5690
-        ports:
-        - containerPort: 5690
-          name: registry
-        volumeMounts:
-        - name: plugins
-          mountPath: /plugins
-        - name: config
-          mountPath: /etc/atomix/config
-          readOnly: true
       volumes:
       - name: certs
-        emptyDir: {}
-      - name: plugins
         emptyDir: {}
       - name: config
         configMap:
