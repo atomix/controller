@@ -3,9 +3,8 @@ module github.com/atomix/controller
 go 1.18
 
 require (
-	github.com/atomix/runtime v0.0.0-20220607230412-d20e9d6134c0
+	github.com/atomix/runtime v0.0.0-20220608081806-5395d17cb060
 	github.com/go-logr/logr v1.2.0
-	github.com/gogo/protobuf v1.3.2
 	google.golang.org/grpc v1.46.0
 	k8s.io/api v0.24.0
 	k8s.io/apimachinery v0.24.0
@@ -25,6 +24,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.5 // indirect
 	github.com/go-openapi/swag v0.19.14 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/gnostic v0.5.7-v3refs // indirect

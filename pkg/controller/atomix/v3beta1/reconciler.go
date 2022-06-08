@@ -10,7 +10,6 @@ import (
 	"github.com/atomix/controller/pkg/apis/atomix/v3beta1"
 	runtimev1 "github.com/atomix/runtime/api/atomix/runtime/v1"
 	"github.com/atomix/runtime/pkg/atomix/errors"
-	"github.com/gogo/protobuf/types"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	corev1 "k8s.io/api/core/v1"
@@ -61,9 +60,7 @@ func (r *BaseReconciler) reconcileCluster(ctx context.Context, cluster *v3beta1.
 					Name:    cluster.Spec.Driver.Name,
 					Version: cluster.Spec.Driver.Version,
 				},
-				Config: &types.Any{
-					Value: cluster.Spec.Config.Raw,
-				},
+				Config: cluster.Spec.Config.Raw,
 			},
 		},
 	}
