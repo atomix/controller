@@ -10,6 +10,6 @@ RUN addgroup -S atomix && adduser -S -G atomix atomix
 
 USER atomix
 
-COPY atomix-controller /usr/local/bin/atomix-controller
+COPY atomix-controller-init-certs /usr/local/bin/atomix-controller-init-certs
 
-ENTRYPOINT ["atomix-controller"]
+ENTRYPOINT ["atomix-controller-init-certs"]

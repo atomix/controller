@@ -2,63 +2,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-GORELEASER_CROSS_VERSION := v1.18.2-v1.9.0
-
 RUNTIME_VERSION := $(shell go run github.com/atomix/runtime/cmd/atomix-runtime-version@master)
 
 .PHONY: build
-build: build-bin build-docker
 
-build-bin:
-	docker run \
-		--rm \
-		--privileged \
-		-e CGO_ENABLED=1 \
-		-e RUNTIME_VERSION=$(RUNTIME_VERSION) \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		-v `pwd`:/build \
-		-w /build \
-		goreleaser/goreleaser-cross:${GORELEASER_CROSS_VERSION} \
-		release -f ./build/bin.yaml --snapshot --rm-dist
-
-build-docker:
-	docker run \
-		--rm \
-		--privileged \
-		-e CGO_ENABLED=1 \
-		-e RUNTIME_VERSION=$(RUNTIME_VERSION) \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		-v `pwd`:/build \
-		-w /build \
-		goreleaser/goreleaser-cross:${GORELEASER_CROSS_VERSION} \
-		release -f ./build/docker.yaml --snapshot --rm-dist
-
-.PHONY: release
-release: release-bin release-docker
-
-release-bin:
-	docker run \
-		--rm \
-		--privileged \
-		-e CGO_ENABLED=1 \
-		-e RUNTIME_VERSION=$(RUNTIME_VERSION) \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		-v `pwd`:/build \
-		-w /build \
-		goreleaser/goreleaser-cross:${GORELEASER_CROSS_VERSION} \
-		release -f ./build/bin.yaml --rm-dist
-
-release-docker:
-	docker run \
-		--rm \
-		--privileged \
-		-e CGO_ENABLED=1 \
-		-e RUNTIME_VERSION=$(RUNTIME_VERSION) \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		-v `pwd`:/build \
-		-w /build \
-		goreleaser/goreleaser-cross:${GORELEASER_CROSS_VERSION} \
-		release -f ./build/docker.yaml --rm-dist
+build:
+	RUNTIME_VERSION=$(RUNTIME_VERSION) goreleaser release --snapshot --rm-dist
 
 reuse-tool: # @HELP install reuse if not present
 	command -v reuse || python3 -m pip install reuse

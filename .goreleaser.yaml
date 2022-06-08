@@ -1,0 +1,84 @@
+# SPDX-FileCopyrightText: 2022-present Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+project_name: atomix-controller
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: atomix-controller
+    main: ./cmd/atomix-controller
+    binary: atomix-controller
+    goos:
+      - linux
+    goarch:
+      - amd64
+    env:
+      - CC=gcc
+      - CXX=g++
+    flags:
+      - -mod=readonly
+      - -trimpath
+    gcflags:
+      - all=-N -l
+    ldflags:
+      - -s -w
+      - -X github.com/atomix/runtime/version.version={{ .Env.RUNTIME_VERSION }}
+  - id: atomix-controller-init-certs
+    main: ./cmd/atomix-controller-init-certs
+    binary: atomix-controller-init-certs
+    goos:
+      - linux
+    goarch:
+      - amd64
+    env:
+      - CC=gcc
+      - CXX=g++
+    flags:
+      - -mod=readonly
+      - -trimpath
+    gcflags:
+      - all=-N -l
+    ldflags:
+      - -s -w
+      - -X github.com/atomix/runtime/version.version={{ .Env.RUNTIME_VERSION }}
+
+dockers:
+  - id: atomix-controller-docker
+    ids:
+      - atomix-controller
+    dockerfile: build/Dockerfile
+    image_templates:
+      - "atomix/controller:latest"
+      - "{{ if (not .IsSnapshot) }}atomix/controller:{{ .Tag }}{{ end }}"
+      - "{{ if (not .IsSnapshot) }}atomix/controller:v{{ .Major }}.{{ .Minor }}{{ end }}"
+  - id: atomix-controller-init-certs-docker
+    ids:
+      - atomix-controller-init-certs
+    dockerfile: build/init.Dockerfile
+    image_templates:
+      - "atomix/controller-init-certs:latest"
+      - "{{ if (not .IsSnapshot) }}atomix/controller-init-certs:{{ .Tag }}{{ end }}"
+      - "{{ if (not .IsSnapshot) }}atomix/controller-init-certs:v{{ .Major }}.{{ .Minor }}{{ end }}"
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-{{.ShortCommit}}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+
+release:
+  github:
+    owner: atomix
+    name: controller
+  prerelease: auto
+  draft: true
