@@ -1,0 +1,12 @@
+apiVersion: atomix.io/v3beta1
+kind: Protocol
+metadata:
+  name: example-protocol
+  namespace: default
+spec:
+  driver:
+    name: memory
+    version: v1beta1
+  config:
+    foo: bar
+    bar: baz

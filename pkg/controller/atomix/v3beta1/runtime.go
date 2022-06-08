@@ -30,6 +30,7 @@ const (
 	runtimeInjectPath             = "/inject-runtime"
 	runtimeInjectAnnotation       = "runtime.atomix.io/inject"
 	runtimeInjectStatusAnnotation = "runtime.atomix.io/status"
+	runtimeVersionAnnotation      = "runtime.atomix.io/version"
 	atomixReadyCondition          = "AtomixReady"
 	injectedStatus                = "injected"
 	runtimeContainerName          = "atomix-runtime"
@@ -37,15 +38,15 @@ const (
 )
 
 const (
-	defaultRuntimeImageEnv = "DEFAULT_RUNTIME_IMAGE"
-	defaultRuntimeImage    = "atomix/runtime:latest"
-	defaultControlPort     = 5679
+	runtimeImageEnv    = "RUNTIME_IMAGE"
+	runtimeVersionEnv  = "RUNTIME_VERSION"
+	defaultControlPort = 5679
 )
 
-func getDefaultRuntimeImage() string {
-	image := os.Getenv(defaultRuntimeImageEnv)
+func getRuntimeImage() string {
+	image := os.Getenv(runtimeImageEnv)
 	if image == "" {
-		image = defaultRuntimeImage
+		image = fmt.Sprintf("atomix/runtime:%s", os.Getenv(runtimeVersionEnv))
 	}
 	return image
 }
@@ -109,7 +110,7 @@ func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request)
 
 	pod.Spec.Containers = append(pod.Spec.Containers, corev1.Container{
 		Name:            runtimeContainerName,
-		Image:           getDefaultRuntimeImage(),
+		Image:           getRuntimeImage(),
 		ImagePullPolicy: corev1.PullIfNotPresent,
 		Env: []corev1.EnvVar{
 			{
@@ -148,6 +149,7 @@ func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request)
 		ConditionType: atomixReadyCondition,
 	})
 	pod.Annotations[runtimeInjectStatusAnnotation] = injectedStatus
+	pod.Annotations[runtimeVersionAnnotation] = os.Getenv(runtimeVersionEnv)
 
 	// Marshal the pod and return a patch response
 	marshaledPod, err := json.Marshal(pod)

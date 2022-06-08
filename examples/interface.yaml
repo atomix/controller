@@ -1,0 +1,12 @@
+apiVersion: atomix.io/v3beta1
+kind: Interface
+metadata:
+  name: example-interface
+  namespace: default
+spec:
+  driver:
+    name: memory
+    version: v1beta1
+  config:
+    foo: bar
+    bar: baz

@@ -21,6 +21,7 @@ init:
     pullSecrets: []
 
 runtime:
+  version: v0.0.0
   image:
     registry: ""
     repository: atomix/runtime

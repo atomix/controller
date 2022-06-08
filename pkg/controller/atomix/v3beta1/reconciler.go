@@ -15,6 +15,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
+	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -133,6 +134,7 @@ func (r *BaseReconciler) reconcileBinding(ctx context.Context, binding *v3beta1.
 	return true, nil
 }
 
-func isRuntimeEnabled(pod *corev1.Pod) bool {
-	return pod.Annotations[runtimeInjectStatusAnnotation] == injectedStatus
+func isControllable(pod *corev1.Pod) bool {
+	return pod.Annotations[runtimeInjectStatusAnnotation] == injectedStatus &&
+		pod.Annotations[runtimeVersionAnnotation] == os.Getenv(runtimeVersionEnv)
 }

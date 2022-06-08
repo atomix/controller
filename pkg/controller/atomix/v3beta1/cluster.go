@@ -90,7 +90,8 @@ func (r *ClusterReconciler) reconcilePods(ctx context.Context, cluster *corev3be
 }
 
 func (r *ClusterReconciler) reconcilePod(ctx context.Context, cluster *corev3beta1.Cluster, pod *corev1.Pod) (bool, error) {
-	if !isRuntimeEnabled(pod) {
+	// If the pod is not controllable by this controller, skip reconciliation
+	if !isControllable(pod) {
 		return false, nil
 	}
 

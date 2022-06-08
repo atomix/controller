@@ -64,8 +64,8 @@ func (r *PodReconciler) Reconcile(ctx context.Context, request reconcile.Request
 		return reconcile.Result{}, err
 	}
 
-	// If the runtime is not running in the pod, skip reconciliation
-	if !isRuntimeEnabled(pod) {
+	// If the pod is not controllable by this controller, skip reconciliation
+	if !isControllable(pod) {
 		return reconcile.Result{}, nil
 	}
 
