@@ -19,3 +19,11 @@ init:
     tag: latest
     pullPolicy: IfNotPresent
     pullSecrets: []
+
+runtime:
+  image:
+    registry: ""
+    repository: atomix/runtime
+    tag: latest
+    pullPolicy: IfNotPresent
+    pullSecrets: []

@@ -38,7 +38,7 @@ const (
 
 const (
 	defaultRuntimeImageEnv = "DEFAULT_RUNTIME_IMAGE"
-	defaultRuntimeImage    = "atomix/atomix-runtime:latest"
+	defaultRuntimeImage    = "atomix/runtime:latest"
 	defaultControlPort     = 5679
 )
 
