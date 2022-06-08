@@ -26,7 +26,6 @@ builds:
       - all=-N -l
     ldflags:
       - -s -w
-      - -X github.com/atomix/runtime/version.version={{ .Env.RUNTIME_VERSION }}
   - id: atomix-controller-init-certs
     main: ./cmd/atomix-controller-init-certs
     binary: atomix-controller-init-certs
@@ -44,7 +43,6 @@ builds:
       - all=-N -l
     ldflags:
       - -s -w
-      - -X github.com/atomix/runtime/version.version={{ .Env.RUNTIME_VERSION }}
 
 dockers:
   - id: atomix-controller-docker
