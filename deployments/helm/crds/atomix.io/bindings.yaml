@@ -28,33 +28,32 @@ spec:
               description: |-
                 The specification for the binding. Contains rules that are used to map primitives to clusters.
               type: object
+              required:
+                - cluster
               properties:
-                required:
-                  - cluster
-                properties:
-                  cluster:
+                cluster:
+                  type: object
+                  required:
+                    - name
+                  properties:
+                    namespace:
+                      type: string
+                    name:
+                      type: string
+                rules:
+                  type: array
+                  items:
                     type: object
-                    required:
-                      - name
                     properties:
-                      namespace:
-                        type: string
-                      name:
-                        type: string
-                  rules:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        kinds:
-                          type: array
-                          items:
-                            type: string
-                        names:
-                          type: array
-                          items:
-                            type: string
-                        metadata:
-                          type: object
-                          additionalProperties:
-                            type: string
+                      kinds:
+                        type: array
+                        items:
+                          type: string
+                      names:
+                        type: array
+                        items:
+                          type: string
+                      metadata:
+                        type: object
+                        additionalProperties:
+                          type: string

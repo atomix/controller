@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atomix-test
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: atomix-test
+  template:
+    metadata:
+      labels:
+        name: atomix-test
+      annotations:
+        runtime.atomix.io/inject: "true"
+    spec:
+      containers:
+        - name: ubuntu
+          image: ubuntu:latest
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "while true; do sleep 30; done;" ]
