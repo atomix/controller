@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/atomix/runtime v0.0.0-20220607230412-d20e9d6134c0
+	github.com/go-logr/logr v1.2.0
 	github.com/gogo/protobuf v1.3.2
 	google.golang.org/grpc v1.46.0
 	k8s.io/api v0.24.0
@@ -22,7 +23,6 @@ require (
 	github.com/emicklei/go-restful v2.9.5+incompatible // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.5 // indirect
 	github.com/go-openapi/swag v0.19.14 // indirect

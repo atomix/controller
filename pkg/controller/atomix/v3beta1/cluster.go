@@ -27,7 +27,7 @@ func addClusterController(mgr manager.Manager) error {
 	}
 
 	// Create a new controller
-	c, err := controller.New("store-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("cluster-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}

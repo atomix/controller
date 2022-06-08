@@ -12,8 +12,6 @@ spec:
   selector:
     name: {{ template "atomix-runtime.fullname" . }}
   ports:
-  - name: control
-    port: 5679
   - name: webhook
     port: 443
     targetPort: 443
