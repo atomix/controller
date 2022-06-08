@@ -10,10 +10,8 @@ import (
 	"github.com/atomix/controller/pkg/apis/atomix/v3beta1"
 	runtimev1 "github.com/atomix/runtime/api/atomix/runtime/v1"
 	"github.com/atomix/runtime/pkg/atomix/errors"
-	"github.com/atomix/runtime/pkg/atomix/grpc/retry"
 	"github.com/gogo/protobuf/types"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -31,9 +29,7 @@ type BaseReconciler struct {
 func (r *BaseReconciler) connect(ctx context.Context, pod *corev1.Pod) (*grpc.ClientConn, error) {
 	controlPort := getControlPort(pod)
 	target := fmt.Sprintf("%s:%d", pod.Status.PodIP, controlPort)
-	return grpc.DialContext(ctx, target,
-		grpc.WithUnaryInterceptor(retry.RetryingUnaryClientInterceptor(retry.WithRetryOn(codes.Unavailable))),
-		grpc.WithTransportCredentials(insecure.NewCredentials()))
+	return grpc.DialContext(ctx, target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 }
 
 func (r *BaseReconciler) reconcileCluster(ctx context.Context, cluster *v3beta1.Cluster, client runtimev1.ClusterServiceClient) (bool, error) {
@@ -138,4 +134,8 @@ func (r *BaseReconciler) reconcileBinding(ctx context.Context, binding *v3beta1.
 		return false, err
 	}
 	return true, nil
+}
+
+func isRuntimeEnabled(pod *corev1.Pod) bool {
+	return pod.Annotations[runtimeInjectStatusAnnotation] == injectedStatus
 }

@@ -31,6 +31,8 @@ spec:
                 The specification for the cluster. The spec must include a protocol configuration describing how the
                 cluster should be implemented.
               type: object
+              required:
+                - driver
               properties:
                 driver:
                   type: object

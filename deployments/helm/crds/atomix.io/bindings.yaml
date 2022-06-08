@@ -30,6 +30,7 @@ spec:
               type: object
               required:
                 - cluster
+                - rules
               properties:
                 cluster:
                   type: object

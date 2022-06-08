@@ -10,6 +10,7 @@ import (
 	runtimev1 "github.com/atomix/runtime/api/atomix/runtime/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -77,17 +78,26 @@ func (r *BindingReconciler) reconcilePods(ctx context.Context, binding *corev3be
 		return false, nil
 	}
 
+	var returnErr error
 	for _, pod := range pods.Items {
 		if ok, err := r.reconcilePod(ctx, binding, &pod); ok {
-			return true, nil
-		} else if err != nil {
-			return false, err
+			return true, returnErr
+		} else if err != nil && returnErr == nil {
+			returnErr = err
 		}
 	}
-	return false, nil
+	return false, returnErr
 }
 
 func (r *BindingReconciler) reconcilePod(ctx context.Context, binding *corev3beta1.Binding, pod *corev1.Pod) (bool, error) {
+	if !isRuntimeEnabled(pod) {
+		return false, nil
+	}
+
+	log.Infof("Reconciling Binding '%s' Pod '%s'",
+		types.NamespacedName{Namespace: binding.Namespace, Name: binding.Name},
+		types.NamespacedName{Namespace: pod.Namespace, Name: pod.Name})
+
 	conn, err := r.connect(ctx, pod)
 	if err != nil {
 		return false, err

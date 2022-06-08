@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/util/workqueue"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -64,8 +65,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, request reconcile.Request
 	}
 
 	// If the runtime is not running in the pod, skip reconciliation
-	runtimeInjected := pod.Annotations[runtimeInjectStatusAnnotation] == injectedStatus
-	if !runtimeInjected {
+	if !isRuntimeEnabled(pod) {
 		return reconcile.Result{}, nil
 	}
 
@@ -101,6 +101,9 @@ func (r *PodReconciler) reconcileClusters(ctx context.Context, pod *corev1.Pod, 
 	}
 
 	for _, cluster := range clusters.Items {
+		log.Infof("Reconciling Pod '%s' Cluster '%s'",
+			types.NamespacedName{Namespace: pod.Namespace, Name: pod.Name},
+			types.NamespacedName{Namespace: cluster.Namespace, Name: cluster.Name})
 		if ok, err := r.reconcileCluster(ctx, &cluster, runtimev1.NewClusterServiceClient(conn)); ok {
 			return true, nil
 		} else if err != nil {
@@ -122,6 +125,9 @@ func (r *PodReconciler) reconcileBindings(ctx context.Context, pod *corev1.Pod, 
 	}
 
 	for _, binding := range bindings.Items {
+		log.Infof("Reconciling Pod '%s' Binding '%s'",
+			types.NamespacedName{Namespace: pod.Namespace, Name: pod.Name},
+			types.NamespacedName{Namespace: binding.Namespace, Name: binding.Name})
 		if ok, err := r.reconcileBinding(ctx, &binding, runtimev1.NewBindingServiceClient(conn)); ok {
 			return true, nil
 		} else if err != nil {
