@@ -108,6 +108,12 @@ func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request)
 		return admission.Allowed(fmt.Sprintf("'%s' annotation is '%s'", runtimeInjectStatusAnnotation, injectedRuntime))
 	}
 
+	runtimeVersion, ok := pod.Annotations[runtimeVersionAnnotation]
+	if ok && runtimeVersion != os.Getenv(runtimeVersionEnv) {
+		log.Infof("Skipping runtime injection for Pod '%s'", podNamespacedName)
+		return admission.Allowed(fmt.Sprintf("'%s' annotation is '%s'", runtimeVersionAnnotation, runtimeVersion))
+	}
+
 	pod.Spec.Containers = append(pod.Spec.Containers, corev1.Container{
 		Name:            runtimeContainerName,
 		Image:           getRuntimeImage(),
