@@ -47,14 +47,11 @@ spec:
           mountPath: /etc/webhook/certs
       containers:
       - name: atomix-controller
-        # Replace this with the built image name
         image: {{ include "atomix-runtime.imagename" .Values.controller.image | quote }}
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
         ports:
-        - containerPort: 5678
-          name: control
         - containerPort: 443
           name: webhook-server
         imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
