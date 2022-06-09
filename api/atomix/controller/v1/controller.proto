@@ -1,0 +1,54 @@
+/*
+SPDX-FileCopyrightText: 2022-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+syntax = "proto3";
+
+package atomix.controller.v1;
+
+import "gogoproto/gogo.proto";
+
+service Controller {
+    rpc OpenSession (OpenSessionRequest) returns (OpenSessionResponse);
+    rpc CloseSession (CloseSessionRequest) returns (CloseSessionResponse);
+}
+
+message PrimitiveId {
+    string type = 1;
+    string namespace = 2;
+    string name = 3;
+}
+
+message SessionId {
+    string pod = 1;
+    string name = 2;
+}
+
+message Session {
+    SessionId session_id = 1 [
+        (gogoproto.customname) = "SessionID",
+        (gogoproto.nullable) = false
+    ];
+    PrimitiveId primitive_id = 2 [
+        (gogoproto.customname) = "PrimitiveID",
+        (gogoproto.nullable) = false
+    ];
+}
+
+message OpenSessionRequest {
+    Session session = 1;
+}
+
+message OpenSessionResponse {
+
+}
+
+message CloseSessionRequest {
+    Session session = 1;
+}
+
+message CloseSessionResponse {
+
+}
