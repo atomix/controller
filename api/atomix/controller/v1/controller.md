@@ -84,7 +84,6 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | service | [string](#string) |  |  |
-| namespace | [string](#string) |  |  |
 | name | [string](#string) |  |  |
 
 
@@ -117,6 +116,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | pod | [string](#string) |  |  |
+| application | [string](#string) |  |  |
 | name | [string](#string) |  |  |
 
 

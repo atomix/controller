@@ -17,13 +17,13 @@ service Controller {
 
 message PrimitiveId {
     string service = 1;
-    string namespace = 2;
-    string name = 3;
+    string name = 2;
 }
 
 message SessionId {
     string pod = 1;
-    string name = 2;
+    string application = 2;
+    string name = 3;
 }
 
 message Session {
