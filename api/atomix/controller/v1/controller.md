@@ -83,7 +83,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| type | [string](#string) |  |  |
+| service | [string](#string) |  |  |
 | namespace | [string](#string) |  |  |
 | name | [string](#string) |  |  |
 

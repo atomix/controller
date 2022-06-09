@@ -16,7 +16,7 @@ service Controller {
 }
 
 message PrimitiveId {
-    string type = 1;
+    string service = 1;
     string namespace = 2;
     string name = 3;
 }
