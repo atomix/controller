@@ -3,18 +3,10 @@ kind: DataBinding
 metadata:
   name: example-data-binding
   namespace: default
-
-
-classes:
-  - name: example-data-class
-
-
 subjects:
   - kind: DataClass
     name: example-data-class
     apiGroup: atomix.io
-
-
-protocolRef:
-  name: example-protocol
+serviceRef:
+  name: example-data-service
   namespace: default

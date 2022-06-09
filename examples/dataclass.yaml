@@ -3,11 +3,10 @@ kind: DataClass
 metadata:
   name: example-data-class
   namespace: default
-
-selector:
+podSelector:
   label1: foo
   label2: bar
-filters:
+matchRules:
   - kinds:
       - '*'
     names:
@@ -15,46 +14,3 @@ filters:
     metadata:
       foo: bar
       bar: baz
-
-
-
-
-
-
-kinds:
-  - '*'
-
-
-
-
-scope:
-  - kind: Map
-    names:
-      - foo
-      - bar
-  - kind: '*'
-    metadata:
-      foo: bar
-
-
-
-
-filter:
-  - kinds: ['*']
-  - names: ['*']
-  - metadata:
-      foo: bar
-
-
-
-
-
-primitives:
-  - kind: Map
-    filter:
-      - my-map
-      - my-other-map
-
-
-rules:
-  - kinds: ['*']

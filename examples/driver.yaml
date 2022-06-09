@@ -1,8 +1,0 @@
-apiVersion: atomix.io/v3beta1
-kind: Driver
-metadata:
-  name: example-driver
-  namespace: default
-spec:
-  repo:
-    url: https://github.com/atomix/drivers
