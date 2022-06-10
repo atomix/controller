@@ -13,7 +13,6 @@
     - [OpenSessionResponse](#atomix-controller-v1-OpenSessionResponse)
     - [PrimitiveId](#atomix-controller-v1-PrimitiveId)
     - [Session](#atomix-controller-v1-Session)
-    - [Session.MetadataEntry](#atomix-controller-v1-Session-MetadataEntry)
     - [SessionId](#atomix-controller-v1-SessionId)
   
     - [Controller](#atomix-controller-v1-Controller)
@@ -151,23 +150,7 @@
 | ----- | ---- | ----- | ----------- |
 | session_id | [SessionId](#atomix-controller-v1-SessionId) |  |  |
 | primitive_id | [PrimitiveId](#atomix-controller-v1-PrimitiveId) |  |  |
-| metadata | [Session.MetadataEntry](#atomix-controller-v1-Session-MetadataEntry) | repeated |  |
-
-
-
-
-
-
-<a name="atomix-controller-v1-Session-MetadataEntry"></a>
-
-### Session.MetadataEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [Metadata](#atomix-controller-v1-Metadata) |  |  |
+| metadata | [Metadata](#atomix-controller-v1-Metadata) |  |  |
 
 
 
