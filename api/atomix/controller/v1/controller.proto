@@ -35,7 +35,19 @@ message Session {
         (gogoproto.customname) = "PrimitiveID",
         (gogoproto.nullable) = false
     ];
-    map<string, string> metadata = 3;
+    map<string, Metadata> metadata = 3 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message Metadata {
+    map<string, MetadataValues> metadata = 1 [
+        (gogoproto.nullable) = false
+    ];
+}
+
+message MetadataValues {
+    repeated string values = 1;
 }
 
 message OpenSessionRequest {

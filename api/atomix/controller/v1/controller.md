@@ -6,6 +6,9 @@
 - [atomix/controller/v1/controller.proto](#atomix_controller_v1_controller-proto)
     - [CloseSessionRequest](#atomix-controller-v1-CloseSessionRequest)
     - [CloseSessionResponse](#atomix-controller-v1-CloseSessionResponse)
+    - [Metadata](#atomix-controller-v1-Metadata)
+    - [Metadata.MetadataEntry](#atomix-controller-v1-Metadata-MetadataEntry)
+    - [MetadataValues](#atomix-controller-v1-MetadataValues)
     - [OpenSessionRequest](#atomix-controller-v1-OpenSessionRequest)
     - [OpenSessionResponse](#atomix-controller-v1-OpenSessionResponse)
     - [PrimitiveId](#atomix-controller-v1-PrimitiveId)
@@ -45,6 +48,52 @@
 
 ### CloseSessionResponse
 
+
+
+
+
+
+
+<a name="atomix-controller-v1-Metadata"></a>
+
+### Metadata
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| metadata | [Metadata.MetadataEntry](#atomix-controller-v1-Metadata-MetadataEntry) | repeated |  |
+
+
+
+
+
+
+<a name="atomix-controller-v1-Metadata-MetadataEntry"></a>
+
+### Metadata.MetadataEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [MetadataValues](#atomix-controller-v1-MetadataValues) |  |  |
+
+
+
+
+
+
+<a name="atomix-controller-v1-MetadataValues"></a>
+
+### MetadataValues
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| values | [string](#string) | repeated |  |
 
 
 
@@ -118,7 +167,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
+| value | [Metadata](#atomix-controller-v1-Metadata) |  |  |
 
 
 
