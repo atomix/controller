@@ -2,12 +2,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-RUNTIME_VERSION := $(shell go run github.com/atomix/runtime/cmd/atomix-runtime-version@master)
-
 .PHONY: build
-
 build:
 	RUNTIME_VERSION=$(RUNTIME_VERSION) goreleaser release --snapshot --rm-dist
+
+.PHONY: api
+api:
+	$(MAKE) -C api
 
 reuse-tool: # @HELP install reuse if not present
 	command -v reuse || python3 -m pip install reuse

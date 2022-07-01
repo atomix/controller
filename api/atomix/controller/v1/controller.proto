@@ -15,27 +15,18 @@ service Controller {
     rpc CloseSession (CloseSessionRequest) returns (CloseSessionResponse);
 }
 
-message PrimitiveId {
-    string service = 1;
-    string name = 2;
-}
-
-message SessionId {
-    string pod = 1;
-    string application = 2;
-    string name = 3;
-}
-
 message Session {
-    SessionId session_id = 1 [
-        (gogoproto.customname) = "SessionID",
-        (gogoproto.nullable) = false
+    string session_id = 1 [
+        (gogoproto.customname) = "SessionID"
     ];
-    PrimitiveId primitive_id = 2 [
-        (gogoproto.customname) = "PrimitiveID",
-        (gogoproto.nullable) = false
+    string namespace = 2;
+    string profile_name = 3;
+    string pod_id = 4 [
+        (gogoproto.customname) = "PodID"
     ];
-    Metadata metadata = 3 [
+    string service_name = 5;
+    string primitive_name = 6;
+    Metadata metadata = 7 [
         (gogoproto.nullable) = false
     ];
 }

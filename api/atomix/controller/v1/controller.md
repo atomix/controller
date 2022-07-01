@@ -11,9 +11,7 @@
     - [MetadataValues](#atomix-controller-v1-MetadataValues)
     - [OpenSessionRequest](#atomix-controller-v1-OpenSessionRequest)
     - [OpenSessionResponse](#atomix-controller-v1-OpenSessionResponse)
-    - [PrimitiveId](#atomix-controller-v1-PrimitiveId)
     - [Session](#atomix-controller-v1-Session)
-    - [SessionId](#atomix-controller-v1-SessionId)
   
     - [Controller](#atomix-controller-v1-Controller)
   
@@ -124,22 +122,6 @@
 
 
 
-<a name="atomix-controller-v1-PrimitiveId"></a>
-
-### PrimitiveId
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| service | [string](#string) |  |  |
-| name | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="atomix-controller-v1-Session"></a>
 
 ### Session
@@ -148,26 +130,13 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| session_id | [SessionId](#atomix-controller-v1-SessionId) |  |  |
-| primitive_id | [PrimitiveId](#atomix-controller-v1-PrimitiveId) |  |  |
+| session_id | [string](#string) |  |  |
+| namespace | [string](#string) |  |  |
+| profile_name | [string](#string) |  |  |
+| pod_id | [string](#string) |  |  |
+| service_name | [string](#string) |  |  |
+| primitive_name | [string](#string) |  |  |
 | metadata | [Metadata](#atomix-controller-v1-Metadata) |  |  |
-
-
-
-
-
-
-<a name="atomix-controller-v1-SessionId"></a>
-
-### SessionId
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| pod | [string](#string) |  |  |
-| application | [string](#string) |  |  |
-| name | [string](#string) |  |  |
 
 
 
