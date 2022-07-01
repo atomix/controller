@@ -45,6 +45,18 @@ spec:
           readOnly: true
         - name: certs
           mountPath: /etc/webhook/certs
+      {{- range .Values.drivers }}
+      - name: "{{ .name }}-{{ .version }}"
+        image: {{ .image | quote }}
+        command:
+        - "cp"
+        - "-a"
+        - "/var/atomix/driver"
+        - "/drivers/{{ .name }}-{{ .version }}"
+        volumeMounts:
+        - name: drivers
+          mountPath: /drivers
+      {{- end }}
       containers:
       - name: atomix-controller
         image: {{ include "atomix-runtime.imagename" .Values.controller.image | quote }}
@@ -91,6 +103,8 @@ spec:
           readOnly: true
       volumes:
       - name: certs
+        emptyDir: {}
+      - name: drivers
         emptyDir: {}
       - name: config
         configMap:

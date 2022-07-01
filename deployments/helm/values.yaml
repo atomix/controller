@@ -7,7 +7,7 @@ replicas: 1
 controller:
   image:
     registry: ""
-    repository: atomix/controller
+    repository: atomix/kubernetes-controller
     tag: latest
     pullPolicy: IfNotPresent
     pullSecrets: []
@@ -15,16 +15,28 @@ controller:
 init:
   image:
     registry: ""
-    repository: atomix/controller-init-certs
+    repository: atomix/kubernetes-controller-init-certs
     tag: latest
     pullPolicy: IfNotPresent
     pullSecrets: []
 
-runtime:
-  version: v0.0.0
+proxy:
   image:
     registry: ""
     repository: atomix/runtime
     tag: latest
     pullPolicy: IfNotPresent
     pullSecrets: []
+
+runtime:
+  version: v0.0.0
+
+drivers:
+  - name: memory
+    versions:
+      - name: v1beta1
+        image: atomix/memory-driver:v1beta1
+  - name: multi-raft
+    versions:
+      - name: v1beta1
+        image: atomix/multi-raft-driver:v1beta1

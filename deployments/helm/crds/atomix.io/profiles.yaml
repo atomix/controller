@@ -1,0 +1,158 @@
+# SPDX-FileCopyrightText: 2022-present Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: profiles.atomix.io
+spec:
+  group: atomix.io
+  scope: Namespaced
+  names:
+    kind: Profile
+    listKind: ProfileList
+    plural: profiles
+    singular: profile
+  versions:
+    - name: v1beta1
+      served: true
+      storage: true
+      subresources:
+        status: { }
+      schema:
+        openAPIV3Schema:
+          type: object
+          required:
+            - spec
+          properties:
+            spec:
+              description: |-
+                The specification for the profile.
+              type: object
+              required:
+                - spec
+              properties:
+                spec:
+                  type: object
+                  required:
+                    - bindings
+                  properties:
+                    bindings:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - store
+                          - primitives
+                        properties:
+                          store:
+                            type: object
+                            required:
+                              - name
+                            properties:
+                              namespace:
+                                type: string
+                              name:
+                                type: string
+                          primitives:
+                            type: array
+                            items:
+                              type: object
+                              required:
+                                - kinds
+                                - apiVersions
+                              properties:
+                                kinds:
+                                  type: array
+                                  items:
+                                    type: string
+                                apiVersions:
+                                  type: array
+                                  items:
+                                    type: string
+                                names:
+                                  type: array
+                                  items:
+                                    type: string
+                                metadata:
+                                  type: object
+                                  additionalProperties:
+                                    type: string
+            status:
+              type: object
+              properties:
+                podStatuses:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - uid
+                    properties:
+                      namespace:
+                        type: string
+                      name:
+                        type: string
+                      uid:
+                        type: string
+                      services:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            store:
+                              type: object
+                              required:
+                                - name
+                                - uid
+                              properties:
+                                namespace:
+                                  type: string
+                                name:
+                                  type: string
+                                uid:
+                                  type: string
+                            state:
+                              type: string
+                              default: Starting
+                              enum:
+                                - Starting
+                                - Running
+                                - Stopping
+                                - Stopped
+                      sessions:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - uid
+                            - primitive
+                            - creationTimestamp
+                            - state
+                          properties:
+                            uid:
+                              type: string
+                            name:
+                              type: string
+                            service:
+                              type: string
+                            metadata:
+                              type: object
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                            creationTimestamp:
+                              type: string
+                            deletionTimestamp:
+                              type: string
+                            state:
+                              type: string
+                              default: Unbound
+                              enum:
+                                - Unbound
+                                - Bound
+                            binding:
+                              type: string
+      additionalPrinterColumns: [ ]
