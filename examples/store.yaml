@@ -1,0 +1,18 @@
+apiVersion: atomix.io/v1beta1
+kind: Store
+metadata:
+  name: example-store
+  namespace: default
+spec:
+  protocol:
+    name: multi-raft
+    version: v0.0.0
+  config:
+    foo: bar
+    bar: baz
+status:
+  primitives:
+    - name: foo
+      kind: Map
+      apiVersion: v1
+      creationTimestamp: xxx

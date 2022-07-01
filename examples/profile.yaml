@@ -1,0 +1,65 @@
+apiVersion: atomix.io/v1beta1
+kind: Profile
+metadata:
+  name: example-profile
+  namespace: default
+spec:
+  bindings:
+    - name: eventually-consistent
+      store:
+        namespace: default
+        name: example-store
+      primitives:
+        - kinds:
+            - Map
+          apiVersions:
+            - v1
+          names:
+            - '*'
+          metadata:
+            foo: bar
+            bar: baz
+status:
+  podStatuses:
+    - uid: abcdef
+      name: abc
+      services:
+        - name: eventually-consistent
+          state: Starting | Running | Stopping | Stopped
+      sessions:
+        - uid: abcdef
+          primitive:
+            name: foo
+            kind: Map
+            apiVersion: v1
+          state: Bound | Unbound
+          creationTimestamp: xxx
+
+  sessionStatuses:
+    - uid: abcdef
+      pod:
+        name: abc
+        uid: defghi
+      primitive:
+        name: foo
+        kind: Map
+        apiVersion: v1
+      state: Open | Closed
+      creationTimestamp: xxx
+
+  bindingStatuses:
+    - name: eventually-consistent
+      pods:
+        - uid: abc
+          state: Bound | NotBound
+      sessions:
+        - uid: abcdef
+          pod:
+            name: abc
+            uid: defghi
+          primitive:
+            name: foo
+            kind: Map
+            apiVersion: v1
+          creationTimestamp: xxx
+          state: Open | Closed
