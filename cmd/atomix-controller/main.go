@@ -8,7 +8,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/atomix/controller/pkg/apis"
-	corev3beta1 "github.com/atomix/controller/pkg/controller/atomix/v3beta1"
+	corev1beta1 "github.com/atomix/controller/pkg/controller/atomix/v1beta1"
 	"github.com/atomix/controller/pkg/controller/util/k8s"
 	"github.com/atomix/runtime/pkg/atomix/logging"
 	"github.com/go-logr/logr"
@@ -70,7 +70,7 @@ func main() {
 	}
 
 	// Add all the controllers
-	if err := corev3beta1.AddControllers(mgr); err != nil {
+	if err := corev1beta1.AddControllers(mgr); err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
