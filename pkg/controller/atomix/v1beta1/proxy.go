@@ -391,35 +391,31 @@ func (i *ProxyInjector) InjectDecoder(decoder *admission.Decoder) error {
 
 // Handle :
 func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) admission.Response {
-	podNamespacedName := types.NamespacedName{
-		Namespace: request.Namespace,
-		Name:      request.Name,
-	}
-	log.Infof("Received admission request for Pod '%s'", podNamespacedName)
+	log.Infof("Received admission request for Pod '%s'", request.UID)
 
 	// Decode the pod
 	pod := &corev1.Pod{}
 	if err := i.decoder.Decode(request, pod); err != nil {
-		log.Errorf("Could not decode Pod '%s'", podNamespacedName, err)
+		log.Errorf("Could not decode Pod '%s'", request.UID, err)
 		return admission.Errored(http.StatusBadRequest, err)
 	}
 
 	injectRuntime, ok := pod.Annotations[proxyInjectAnnotation]
 	if !ok {
-		log.Infof("Skipping proxy injection for Pod '%s'", podNamespacedName)
+		log.Infof("Skipping proxy injection for Pod '%s'", request.UID)
 		return admission.Allowed(fmt.Sprintf("'%s' annotation not found", proxyInjectAnnotation))
 	}
 	if inject, err := strconv.ParseBool(injectRuntime); err != nil {
-		log.Errorf("Runtime injection failed for Pod '%s'", podNamespacedName, err)
+		log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
 		return admission.Allowed(fmt.Sprintf("'%s' annotation could not be parsed", proxyInjectAnnotation))
 	} else if !inject {
-		log.Infof("Skipping proxy injection for Pod '%s'", podNamespacedName)
+		log.Infof("Skipping proxy injection for Pod '%s'", request.UID)
 		return admission.Allowed(fmt.Sprintf("'%s' annotation is false", proxyInjectAnnotation))
 	}
 
 	injectedRuntime, ok := pod.Annotations[proxyInjectStatusAnnotation]
 	if ok && injectedRuntime == injectedStatus {
-		log.Infof("Skipping proxy injection for Pod '%s'", podNamespacedName)
+		log.Infof("Skipping proxy injection for Pod '%s'", request.UID)
 		return admission.Allowed(fmt.Sprintf("'%s' annotation is '%s'", proxyInjectStatusAnnotation, injectedRuntime))
 	}
 
@@ -430,7 +426,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 
 	profileName, ok := pod.Annotations[proxyProfileAnnotation]
 	if !ok {
-		log.Warnf("No profile specified for Pod '%s'", podNamespacedName)
+		log.Warnf("No profile specified for Pod '%s'", request.UID)
 	} else {
 		profile := &atomixv1beta1.Profile{}
 		profileNamespacedName := types.NamespacedName{
@@ -438,7 +434,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 			Name:      profileName,
 		}
 		if err := i.client.Get(ctx, profileNamespacedName, profile); err != nil {
-			log.Errorf("Runtime injection failed for Pod '%s'", podNamespacedName, err)
+			log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
 			return admission.Errored(http.StatusInternalServerError, err)
 		}
 
@@ -453,7 +449,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 				Name:      binding.Store.Name,
 			}
 			if err := i.client.Get(ctx, storeNamespacedName, store); err != nil {
-				log.Errorf("Runtime injection failed for Pod '%s'", podNamespacedName, err)
+				log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
 				return admission.Errored(http.StatusInternalServerError, err)
 			}
 
@@ -462,7 +458,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 				Name: store.Spec.Protocol.Name,
 			}
 			if err := i.client.Get(ctx, protocolNamespacedName, protocol); err != nil {
-				log.Errorf("Runtime injection failed for Pod '%s'", podNamespacedName, err)
+				log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
 				return admission.Errored(http.StatusInternalServerError, err)
 			}
 
@@ -475,7 +471,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 			}
 
 			if protocolVersion == nil {
-				log.Infof("Skipping runtime injection for Pod '%s'", podNamespacedName)
+				log.Infof("Skipping runtime injection for Pod '%s'", request.UID)
 				return admission.Denied(fmt.Sprintf("Unknown version '%s' for protocol '%s'", store.Spec.Protocol.Version, store.Spec.Protocol.Name))
 			}
 
@@ -488,11 +484,11 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 			}
 
 			if protocolDriver == nil {
-				log.Infof("Skipping runtime injection for Pod '%s'", podNamespacedName)
+				log.Infof("Skipping runtime injection for Pod '%s'", request.UID)
 				return admission.Denied(fmt.Sprintf("Unknown runtime version '%s' for protocol '%s'", runtimeVersion, store.Spec.Protocol.Name))
 			}
 
-			log.Infof("Injecting Protocol '%s' driver version '%s' into Pod '%s'", protocol.Name, protocolVersion.Name, podNamespacedName)
+			log.Infof("Injecting Protocol '%s' driver version '%s' into Pod '%s'", protocol.Name, protocolVersion.Name, request.UID)
 			protocolName := fmt.Sprintf("%s-%s", protocol.Name, protocolVersion.Name)
 			driverFile := fmt.Sprintf("%s.so", protocolName)
 			pod.Spec.InitContainers = append(pod.Spec.InitContainers, corev1.Container{
@@ -528,7 +524,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 				Name: podIDEnv,
 				ValueFrom: &corev1.EnvVarSource{
 					FieldRef: &corev1.ObjectFieldSelector{
-						FieldPath: "metadata.podID",
+						FieldPath: "metadata.uid",
 					},
 				},
 			},
@@ -607,7 +603,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 	// Marshal the pod and return a patch response
 	marshaledPod, err := json.Marshal(pod)
 	if err != nil {
-		log.Errorf("Runtime injection failed for Pod '%s'", podNamespacedName, err)
+		log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 	return admission.PatchResponseFromRaw(request.Object.Raw, marshaledPod)
