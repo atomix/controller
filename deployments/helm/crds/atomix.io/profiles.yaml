@@ -18,8 +18,6 @@ spec:
     - name: v1beta1
       served: true
       storage: true
-      subresources:
-        status: { }
       schema:
         openAPIV3Schema:
           type: object
@@ -79,5 +77,4 @@ spec:
                                   type: object
                                   additionalProperties:
                                     type: string
-            status: {}
       additionalPrinterColumns: [ ]

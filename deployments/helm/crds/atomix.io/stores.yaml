@@ -55,4 +55,8 @@ spec:
                         The configuration for the runtime driver.
                       type: object
                       x-kubernetes-preserve-unknown-fields: true
-                status: {}
+            status:
+              type: object
+              properties:
+                ready:
+                  type: boolean

@@ -100,8 +100,7 @@ type Profile struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ProfileSpec   `json:"spec"`
-	Status ProfileStatus `json:"status"`
+	Spec ProfileSpec `json:"spec"`
 }
 
 // ProfileSpec is the spec for a Profile resource
@@ -121,8 +120,6 @@ type PrimitiveBindingRule struct {
 	Names       []string          `json:"names"`
 	Tags        map[string]string `json:"tags"`
 }
-
-type ProfileStatus struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
