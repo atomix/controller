@@ -17,6 +17,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/json"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/util/workqueue"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -30,6 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -77,14 +79,15 @@ func addProxyController(mgr manager.Manager) error {
 		},
 	})
 
-	r := &ProxyReconciler{
-		client: mgr.GetClient(),
-		scheme: mgr.GetScheme(),
-		config: mgr.GetConfig(),
-	}
-
 	// Create a new controller
-	c, err := controller.New("proxy-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("proxy-controller", mgr, controller.Options{
+		Reconciler: &ProxyReconciler{
+			client: mgr.GetClient(),
+			scheme: mgr.GetScheme(),
+			config: mgr.GetConfig(),
+		},
+		RateLimiter: workqueue.NewItemExponentialFailureRateLimiter(time.Millisecond*10, time.Second*5),
+	})
 	if err != nil {
 		return err
 	}
