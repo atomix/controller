@@ -76,15 +76,7 @@ type ProtocolReference struct {
 	Version string `json:"version"`
 }
 
-type StoreStatus struct {
-	Primitives []PrimitiveStatus `json:"primitives"`
-}
-
-type PrimitiveStatus struct {
-	corev1.ObjectReference `json:",inline"`
-	CreationTimestamp      metav1.Time  `json:"creationTimestamp"`
-	DeletionTimestamp      *metav1.Time `json:"deletionTimestamp"`
-}
+type StoreStatus struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -123,49 +115,10 @@ type PrimitiveBindingRule struct {
 	Kinds       []string          `json:"kinds"`
 	APIVersions []string          `json:"apiVersions"`
 	Names       []string          `json:"names"`
-	Metadata    map[string]string `json:"metadata"`
+	Tags        map[string]string `json:"tags"`
 }
 
-type ProfileStatus struct {
-	PodStatuses []ProfilePodStatus `json:"podStatuses"`
-}
-
-type ProfilePodStatus struct {
-	corev1.ObjectReference `json:",inline"`
-	Services               []ProfileServiceStatus `json:"services"`
-	Sessions               []ProfileSessionStatus `json:"sessions"`
-}
-
-type ProfileServiceState string
-
-const (
-	ProfileServiceStarting = "Starting"
-	ProfileServiceRunning  = "Running"
-	ProfileServiceStopping = "Stopping"
-	ProfileServiceStopped  = "Stopped"
-)
-
-type ProfileServiceStatus struct {
-	Store corev1.ObjectReference `json:"store"`
-	State ProfileServiceState    `json:"state"`
-}
-
-type ProfileSessionState string
-
-const (
-	ProfileSessionUnbound = "Unbound"
-	ProfileSessionBound   = "Bound"
-)
-
-type ProfileSessionStatus struct {
-	corev1.ObjectReference `json:",inline"`
-	Service                string `json:"service"`
-	Metadata               map[string][]string
-	CreationTimestamp      metav1.Time         `json:"creationTimestamp"`
-	DeletionTimestamp      *metav1.Time        `json:"deletionTimestamp"`
-	State                  ProfileSessionState `json:"state"`
-	Binding                string              `json:"binding"`
-}
+type ProfileStatus struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

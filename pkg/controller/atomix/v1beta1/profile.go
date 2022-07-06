@@ -88,7 +88,7 @@ func (r *ProfileReconciler) Reconcile(ctx context.Context, request reconcile.Req
 			if storeNamespace == "" {
 				storeNamespace = profile.Namespace
 			}
-			route.Store = proxy.StoreConfig{
+			route.Store = proxy.StoreID{
 				Namespace: storeNamespace,
 				Name:      binding.Store.Name,
 			}
@@ -97,7 +97,7 @@ func (r *ProfileReconciler) Reconcile(ctx context.Context, request reconcile.Req
 					Kinds:       primitive.Kinds,
 					APIVersions: primitive.APIVersions,
 					Names:       primitive.Names,
-					Metadata:    primitive.Metadata,
+					Tags:        primitive.Tags,
 				}
 				route.Rules = append(route.Rules, rule)
 			}
