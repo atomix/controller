@@ -32,32 +32,10 @@ spec:
                 type: object
                 required:
                   - name
-                  - primitives
+                  - drivers
                 properties:
                   name:
                     type: string
-                  primitives:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - kind
-                        - apiVersions
-                      properties:
-                        kind:
-                          type: string
-                        apiVersions:
-                          type: array
-                          items:
-                            type: object
-                            required:
-                              - name
-                              - service
-                            properties:
-                              name:
-                                type: string
-                              service:
-                                type: string
                   drivers:
                     type: array
                     items:
@@ -65,8 +43,11 @@ spec:
                       required:
                         - runtimeVersion
                         - image
+                        - path
                       properties:
                         runtimeVersion:
                           type: string
                         image:
+                          type: string
+                        path:
                           type: string
