@@ -9,6 +9,7 @@ build:
 kind: build
 	@if [ "`kind get clusters`" = '' ]; then echo "no kind cluster found" && exit 1; fi
 	kind load docker-image atomix/controller:latest
+	kind load docker-image atomix/controller-init-certs:latest
 
 reuse-tool: # @HELP install reuse if not present
 	command -v reuse || python3 -m pip install reuse
