@@ -17,6 +17,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/json"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/workqueue"
 	"net/http"
 	"os"
@@ -85,6 +86,7 @@ func addProxyController(mgr manager.Manager) error {
 			client: mgr.GetClient(),
 			scheme: mgr.GetScheme(),
 			config: mgr.GetConfig(),
+			events: mgr.GetEventRecorderFor("atomix"),
 		},
 		RateLimiter: workqueue.NewItemExponentialFailureRateLimiter(time.Millisecond*10, time.Second*5),
 	})
@@ -153,6 +155,7 @@ type ProxyReconciler struct {
 	client client.Client
 	scheme *runtime.Scheme
 	config *rest.Config
+	events record.EventRecorder
 }
 
 // Reconcile reconciles Proxy resources
@@ -243,6 +246,7 @@ func (r *ProxyReconciler) reconcileBinding(ctx context.Context, pod *corev1.Pod,
 						return false, err
 					}
 
+					r.events.Eventf(pod, "Normal", "DisconnectStore", "Disconnecting store '%s'", storeNamespacedName)
 					client := proxyv1.NewProxyClient(conn)
 					request := &proxyv1.DisconnectRequest{
 						StoreID: proxyv1.StoreId{
@@ -253,8 +257,10 @@ func (r *ProxyReconciler) reconcileBinding(ctx context.Context, pod *corev1.Pod,
 					_, err = client.Disconnect(ctx, request)
 					if err != nil {
 						log.Error(err)
+						r.events.Eventf(pod, "Warning", "DisconnectStoreFailed", "Failed disconnecting from store '%s': %s", storeNamespacedName, err)
 						return false, err
 					}
+					r.events.Eventf(pod, "Normal", "DisconnectStoreSucceeded", "Successfully disconnected from store '%s'", storeNamespacedName)
 
 					// Update the binding status
 					status.State = atomixv1beta1.BindingUnbound
@@ -283,6 +289,7 @@ func (r *ProxyReconciler) reconcileBinding(ctx context.Context, pod *corev1.Pod,
 					return false, err
 				}
 
+				r.events.Eventf(pod, "Normal", "ConnectStore", "Connecting store '%s'", storeNamespacedName)
 				client := proxyv1.NewProxyClient(conn)
 				request := &proxyv1.ConnectRequest{
 					StoreID: proxyv1.StoreId{
@@ -298,8 +305,10 @@ func (r *ProxyReconciler) reconcileBinding(ctx context.Context, pod *corev1.Pod,
 				_, err = client.Connect(ctx, request)
 				if err != nil {
 					log.Error(err)
+					r.events.Eventf(pod, "Warning", "ConnectStoreFailed", "Failed connecting to store '%s': %s", storeNamespacedName, err)
 					return false, err
 				}
+				r.events.Eventf(pod, "Normal", "ConnectStoreSucceeded", "Successfully connected to store '%s'", storeNamespacedName)
 
 				// Update the binding status
 				status.State = atomixv1beta1.BindingBound
@@ -319,6 +328,7 @@ func (r *ProxyReconciler) reconcileBinding(ctx context.Context, pod *corev1.Pod,
 						return false, err
 					}
 
+					r.events.Eventf(pod, "Normal", "ConfigureStore", "Configuring store '%s'", storeNamespacedName)
 					client := proxyv1.NewProxyClient(conn)
 					request := &proxyv1.ConfigureRequest{
 						StoreID: proxyv1.StoreId{
@@ -329,9 +339,11 @@ func (r *ProxyReconciler) reconcileBinding(ctx context.Context, pod *corev1.Pod,
 					}
 					_, err = client.Configure(ctx, request)
 					if err != nil {
+						r.events.Eventf(pod, "Warning", "ConfigureStoreFailed", "Failed reconfiguring store '%s': %s", storeNamespacedName, err)
 						log.Error(err)
 						return false, err
 					}
+					r.events.Eventf(pod, "Normal", "ConfigureStoreSucceeded", "Successfully configured store '%s'", storeNamespacedName)
 
 					// Update the binding status
 					status.Version = store.ResourceVersion
