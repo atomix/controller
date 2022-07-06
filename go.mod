@@ -3,8 +3,8 @@ module github.com/atomix/controller
 go 1.18
 
 require (
-	github.com/atomix/proxy v0.0.0-20220706021812-1ee94c6dc73c
-	github.com/atomix/runtime v0.0.0-20220706021412-abbbdcb7235e
+	github.com/atomix/proxy v0.0.0-20220706025708-c8e7ddddccc7
+	github.com/atomix/runtime v0.0.0-20220706025552-24028f7002c1
 	github.com/go-logr/logr v1.2.0
 	github.com/spf13/cobra v1.4.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
@@ -17,8 +17,8 @@ require (
 require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/atomix/proxy/api v0.0.0-20220609194938-8fae92c89d89 // indirect
-	github.com/atomix/runtime/api v0.0.0-20220706021412-abbbdcb7235e // indirect
+	github.com/atomix/proxy/api v0.0.0-20220706021812-1ee94c6dc73c // indirect
+	github.com/atomix/runtime/api v0.0.0-20220706025552-24028f7002c1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
