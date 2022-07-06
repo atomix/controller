@@ -19,5 +19,3 @@ spec:
           metadata:
             foo: bar
             bar: baz
-status:
-  ...

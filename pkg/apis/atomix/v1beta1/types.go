@@ -18,6 +18,10 @@ type Protocol struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	Spec ProtocolSpec `json:"spec"`
+}
+
+type ProtocolSpec struct {
 	Versions []ProtocolVersion `json:"versions,omitempty"`
 }
 

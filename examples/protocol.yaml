@@ -2,20 +2,21 @@ apiVersion: atomix.io/v1beta1
 kind: Protocol
 metadata:
   name: example-protocol
-versions:
-  - name: v1beta1
-    drivers:
-      - runtimeVersion: v0.0.0
-        image: atomix/example-driver:v1beta1-runtime0.0.0
-        path: /var/atomix/drivers/example-protocol-v0.0.0.so
-      - runtimeVersion: v0.0.1
-        image: atomix/example-driver:v1beta1-runtime0.0.1
-        path: /var/atomix/drivers/example-protocol-v0.0.1.so
-  - name: v1beta2
-    drivers:
-      - runtimeVersion: v0.0.0
-        image: atomix/example-driver:v1beta2-runtime0.0.0
-        path: /var/atomix/drivers/example-protocol-v0.0.0.so
-      - runtimeVersion: v0.0.1
-        image: atomix/example-driver:v1beta2-runtime0.0.1
-        path: /var/atomix/drivers/example-protocol-v0.0.1.so
+spec:
+  versions:
+    - name: v1beta1
+      drivers:
+        - runtimeVersion: v0.0.0
+          image: atomix/example-driver:v1beta1-runtime0.0.0
+          path: /var/atomix/drivers/example-protocol-v0.0.0.so
+        - runtimeVersion: v0.0.1
+          image: atomix/example-driver:v1beta1-runtime0.0.1
+          path: /var/atomix/drivers/example-protocol-v0.0.1.so
+    - name: v1beta2
+      drivers:
+        - runtimeVersion: v0.0.0
+          image: atomix/example-driver:v1beta2-runtime0.0.0
+          path: /var/atomix/drivers/example-protocol-v0.0.0.so
+        - runtimeVersion: v0.0.1
+          image: atomix/example-driver:v1beta2-runtime0.0.1
+          path: /var/atomix/drivers/example-protocol-v0.0.1.so

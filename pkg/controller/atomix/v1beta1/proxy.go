@@ -58,7 +58,7 @@ func getProxyImage() string {
 
 func addProxyController(mgr manager.Manager) error {
 	mgr.GetWebhookServer().Register(proxyInjectPath, &webhook.Admission{
-		Handler: &RuntimeInjector{
+		Handler: &ProxyInjector{
 			client: mgr.GetClient(),
 			scheme: mgr.GetScheme(),
 		},
@@ -66,21 +66,21 @@ func addProxyController(mgr manager.Manager) error {
 	return nil
 }
 
-// RuntimeInjector is a mutating webhook that injects the proxy container into pods
-type RuntimeInjector struct {
+// ProxyInjector is a mutating webhook that injects the proxy container into pods
+type ProxyInjector struct {
 	client  client.Client
 	scheme  *runtime.Scheme
 	decoder *admission.Decoder
 }
 
 // InjectDecoder :
-func (i *RuntimeInjector) InjectDecoder(decoder *admission.Decoder) error {
+func (i *ProxyInjector) InjectDecoder(decoder *admission.Decoder) error {
 	i.decoder = decoder
 	return nil
 }
 
 // Handle :
-func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request) admission.Response {
+func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) admission.Response {
 	podNamespacedName := types.NamespacedName{
 		Namespace: request.Namespace,
 		Name:      request.Name,
@@ -157,7 +157,7 @@ func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request)
 			}
 
 			var protocolVersion *atomixv1beta1.ProtocolVersion
-			for _, version := range protocol.Versions {
+			for _, version := range protocol.Spec.Versions {
 				if version.Name == store.Spec.Protocol.Version {
 					protocolVersion = &version
 					break
@@ -303,4 +303,4 @@ func (i *RuntimeInjector) Handle(ctx context.Context, request admission.Request)
 	return admission.PatchResponseFromRaw(request.Object.Raw, marshaledPod)
 }
 
-var _ admission.Handler = &RuntimeInjector{}
+var _ admission.Handler = &ProxyInjector{}

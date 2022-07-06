@@ -22,32 +22,37 @@ spec:
         openAPIV3Schema:
           type: object
           required:
-            - versions
+            - spec
           properties:
-            versions:
-              description: |-
-                A list of protocol versions and available drivers for each version.
-              type: array
-              items:
-                type: object
-                required:
-                  - name
-                  - drivers
-                properties:
-                  name:
-                    type: string
-                  drivers:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - runtimeVersion
-                        - image
-                        - path
-                      properties:
-                        runtimeVersion:
-                          type: string
-                        image:
-                          type: string
-                        path:
-                          type: string
+            spec:
+              type: object
+              required:
+                - versions
+              properties:
+                versions:
+                  description: |-
+                    A list of protocol versions and available drivers for each version.
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - drivers
+                    properties:
+                      name:
+                        type: string
+                      drivers:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - runtimeVersion
+                            - image
+                            - path
+                          properties:
+                            runtimeVersion:
+                              type: string
+                            image:
+                              type: string
+                            path:
+                              type: string
