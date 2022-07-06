@@ -5,7 +5,7 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: {{ template "atomix-runtime.fullname" . }}
+  name: {{ template "atomix-controller.fullname" . }}
 webhooks:
 - name: injector.atomix.io
   rules:
@@ -16,9 +16,9 @@ webhooks:
     scope: Namespaced
   clientConfig:
     service:
-      name: atomix-runtime
+      name: atomix-controller
       namespace: kube-system
-      path: /inject-runtime
+      path: /inject-proxy
   admissionReviewVersions: ["v1beta1"]
   sideEffects: None
   failurePolicy: Ignore

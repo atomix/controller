@@ -5,28 +5,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "atomix-runtime.fullname" . }}
+  name: {{ template "atomix-controller.fullname" . }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      name: {{ template "atomix-runtime.fullname" . }}
+      name: {{ template "atomix-controller.fullname" . }}
   template:
     metadata:
       labels:
-        name: {{ template "atomix-runtime.fullname" . }}
+        name: {{ template "atomix-controller.fullname" . }}
     spec:
-      serviceAccountName: {{ template "atomix-runtime.fullname" . }}
+      serviceAccountName: {{ template "atomix-controller.fullname" . }}
       initContainers:
       - name: init-certs
-        image: {{ include "atomix-runtime.imagename" .Values.init.image | quote }}
+        image: {{ include "atomix-controller.imagename" .Values.init.image | quote }}
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
         env:
         - name: CONTROLLER_NAME
-          value: {{ template "atomix-runtime.fullname" . }}
+          value: {{ template "atomix-controller.fullname" . }}
         - name: CONTROLLER_NAMESPACE
           valueFrom:
             fieldRef:
@@ -59,7 +59,7 @@ spec:
       {{- end }}
       containers:
       - name: atomix-controller
-        image: {{ include "atomix-runtime.imagename" .Values.controller.image | quote }}
+        image: {{ include "atomix-controller.imagename" .Values.controller.image | quote }}
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
@@ -77,7 +77,7 @@ spec:
           failureThreshold: 1
         env:
         - name: CONTROLLER_NAME
-          value: {{ template "atomix-runtime.fullname" . }}
+          value: {{ template "atomix-controller.fullname" . }}
         - name: CONTROLLER_NAMESPACE
           valueFrom:
             fieldRef:
@@ -91,9 +91,9 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: RUNTIME_IMAGE
-          value: {{ include "atomix-runtime.imagename" .Values.runtime.image | quote }}
+          value: {{ include "atomix-controller.imagename" .Values.controller.image | quote }}
         - name: RUNTIME_VERSION
-          value: {{ .Values.runtime.version }}
+          value: {{ .Values.controller.version }}
         volumeMounts:
         - name: certs
           mountPath: /tmp/k8s-webhook-server/serving-certs
@@ -108,4 +108,4 @@ spec:
         emptyDir: {}
       - name: config
         configMap:
-          name: {{ template "atomix-runtime.fullname" . }}-config
+          name: {{ template "atomix-controller.fullname" . }}-config

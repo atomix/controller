@@ -3,9 +3,9 @@ SPDX-FileCopyrightText: 2022-present Intel Corporation
 SPDX-License-Identifier: Apache-2.0
 -->
 
-## Atomix Runtime
+## Atomix Runtime Controller
 
-Provides a [Helm] chart for deploying the [Atomix Runtime] on [Kubernetes].
+Provides a [Helm] chart for deploying [Atomix] on [Kubernetes].
 
 To install the chart, run `helm install` from the root:
 
@@ -13,10 +13,6 @@ To install the chart, run `helm install` from the root:
 helm install atomix-controller .
 ```
 
-```bash
-helm install atomix-primitive .
-```
-
 [Helm]: https://helm.sh/
 [Kubernetes]: https://kubernetes.io
-[Atomix Controller]: https://github.com/atomix/atomix-runtime
+[Atomix]: https://atomix.io
