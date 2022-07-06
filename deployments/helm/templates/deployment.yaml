@@ -45,18 +45,6 @@ spec:
           readOnly: true
         - name: certs
           mountPath: /etc/webhook/certs
-      {{- range .Values.drivers }}
-      - name: "{{ .name }}-{{ .version }}"
-        image: {{ .image | quote }}
-        command:
-        - "cp"
-        - "-a"
-        - "/var/atomix/driver"
-        - "/drivers/{{ .name }}-{{ .version }}"
-        volumeMounts:
-        - name: drivers
-          mountPath: /drivers
-      {{- end }}
       containers:
       - name: atomix-controller
         image: {{ include "atomix-controller.imagename" .Values.controller.image | quote }}
@@ -90,10 +78,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: RUNTIME_IMAGE
-          value: {{ include "atomix-controller.imagename" .Values.controller.image | quote }}
+        - name: PROXY_IMAGE
+          value: {{ include "atomix-controller.imagename" .Values.proxy.image | quote }}
         - name: RUNTIME_VERSION
-          value: {{ .Values.controller.version }}
+          value: {{ .Values.proxy.runtimeVersion }}
         volumeMounts:
         - name: certs
           mountPath: /tmp/k8s-webhook-server/serving-certs
@@ -103,8 +91,6 @@ spec:
           readOnly: true
       volumes:
       - name: certs
-        emptyDir: {}
-      - name: drivers
         emptyDir: {}
       - name: config
         configMap:

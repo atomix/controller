@@ -55,8 +55,8 @@ const (
 )
 
 const (
-	runtimeVersionEnv = "ATOMIX_RUNTIME_VERSION"
-	proxyImageEnv     = "ATOMIX_PROXY_IMAGE"
+	runtimeVersionEnv = "RUNTIME_VERSION"
+	proxyImageEnv     = "PROXY_IMAGE"
 	defaultProxyImage = "atomix/proxy:latest"
 )
 
