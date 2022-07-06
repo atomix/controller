@@ -174,11 +174,13 @@ func (r *PodReconciler) Reconcile(ctx context.Context, request reconcile.Request
 		}
 	}
 
-	if ok, err := r.setAtomixCondition(pod, corev1.ConditionTrue, "", ""); err != nil {
-		log.Error(err)
-		return reconcile.Result{}, err
-	} else if ok {
-		return reconcile.Result{}, nil
+	if proxy.Status.Ready {
+		if ok, err := r.setAtomixCondition(pod, corev1.ConditionTrue, "", ""); err != nil {
+			log.Error(err)
+			return reconcile.Result{}, err
+		} else if ok {
+			return reconcile.Result{}, nil
+		}
 	}
 	return reconcile.Result{}, nil
 }

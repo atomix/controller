@@ -94,6 +94,54 @@ func addProxyController(mgr manager.Manager) error {
 	if err != nil {
 		return err
 	}
+
+	// Watch for changes to Profiles
+	err = c.Watch(&source.Kind{Type: &atomixv1beta1.Profile{}}, handler.EnqueueRequestsFromMapFunc(func(object client.Object) []reconcile.Request {
+		proxyList := &atomixv1beta1.ProxyList{}
+		if err := mgr.GetClient().List(context.Background(), proxyList, &client.ListOptions{Namespace: object.GetNamespace()}); err != nil {
+			log.Error(err)
+			return nil
+		}
+
+		var requests []reconcile.Request
+		for _, proxy := range proxyList.Items {
+			if proxy.Profile.Name == object.GetName() {
+				requests = append(requests, reconcile.Request{
+					NamespacedName: types.NamespacedName{
+						Namespace: proxy.Namespace,
+						Name:      proxy.Name,
+					},
+				})
+			}
+		}
+		return requests
+	}))
+	if err != nil {
+		return err
+	}
+
+	// Watch for changes to Stores
+	err = c.Watch(&source.Kind{Type: &atomixv1beta1.Store{}}, handler.EnqueueRequestsFromMapFunc(func(object client.Object) []reconcile.Request {
+		proxyList := &atomixv1beta1.ProxyList{}
+		if err := mgr.GetClient().List(context.Background(), proxyList); err != nil {
+			log.Error(err)
+			return nil
+		}
+
+		var requests []reconcile.Request
+		for _, proxy := range proxyList.Items {
+			requests = append(requests, reconcile.Request{
+				NamespacedName: types.NamespacedName{
+					Namespace: proxy.Namespace,
+					Name:      proxy.Name,
+				},
+			})
+		}
+		return requests
+	}))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -161,7 +209,6 @@ func (r *ProxyReconciler) setStatus(ctx context.Context, proxy *atomixv1beta1.Pr
 			break
 		}
 	}
-
 	proxy.Status.Ready = ready
 	return r.client.Status().Update(ctx, proxy)
 }
