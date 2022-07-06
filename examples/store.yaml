@@ -5,8 +5,8 @@ metadata:
   namespace: default
 spec:
   protocol:
-    name: multi-raft
-    version: v0.0.0
+    name: example-protocol
+    version: v1beta1
   config:
     foo: bar
     bar: baz

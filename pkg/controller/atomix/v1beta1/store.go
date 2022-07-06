@@ -64,7 +64,7 @@ func (i *StoreValidator) Handle(ctx context.Context, request admission.Request) 
 	protocol := &atomixv1beta1.Protocol{}
 	if err := i.client.Get(ctx, protocolNamespacedName, protocol); err != nil {
 		if errors.IsNotFound(err) {
-			return admission.Denied(fmt.Sprintf("protocol '%s' not found", protocolNamespacedName))
+			return admission.Denied(fmt.Sprintf("protocol '%s' not found", store.Spec.Protocol.Name))
 		}
 		return admission.Errored(http.StatusInternalServerError, err)
 	}

@@ -29,52 +29,50 @@ spec:
                 The specification for the profile.
               type: object
               required:
-                - spec
+                - bindings
               properties:
-                spec:
-                  type: object
-                  required:
-                    - bindings
-                  properties:
-                    bindings:
-                      type: array
-                      items:
+                bindings:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - store
+                      - primitives
+                    properties:
+                      name:
+                        type: string
+                      store:
                         type: object
                         required:
-                          - store
-                          - primitives
+                          - name
                         properties:
-                          store:
-                            type: object
-                            required:
-                              - name
-                            properties:
-                              namespace:
+                          namespace:
+                            type: string
+                          name:
+                            type: string
+                      primitives:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - kinds
+                            - apiVersions
+                          properties:
+                            kinds:
+                              type: array
+                              items:
                                 type: string
-                              name:
+                            apiVersions:
+                              type: array
+                              items:
                                 type: string
-                          primitives:
-                            type: array
-                            items:
+                            names:
+                              type: array
+                              items:
+                                type: string
+                            tags:
                               type: object
-                              required:
-                                - kinds
-                                - apiVersions
-                              properties:
-                                kinds:
-                                  type: array
-                                  items:
-                                    type: string
-                                apiVersions:
-                                  type: array
-                                  items:
-                                    type: string
-                                names:
-                                  type: array
-                                  items:
-                                    type: string
-                                tags:
-                                  type: object
-                                  additionalProperties:
-                                    type: string
+                              additionalProperties:
+                                type: string
       additionalPrinterColumns: [ ]

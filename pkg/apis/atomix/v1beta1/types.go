@@ -65,8 +65,7 @@ type Store struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   StoreSpec   `json:"spec"`
-	Status StoreStatus `json:"status"`
+	Spec StoreSpec `json:"spec"`
 }
 
 // StoreSpec is the spec for a Store resource
@@ -79,8 +78,6 @@ type ProtocolReference struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 }
-
-type StoreStatus struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
