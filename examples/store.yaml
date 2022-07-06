@@ -11,8 +11,4 @@ spec:
     foo: bar
     bar: baz
 status:
-  primitives:
-    - name: foo
-      kind: Map
-      apiVersion: v1
-      creationTimestamp: xxx
+  ...

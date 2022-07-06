@@ -7,16 +7,12 @@ package main
 import (
 	"context"
 	"fmt"
-	controllerv1 "github.com/atomix/controller/api/atomix/controller/v1"
 	"github.com/atomix/controller/pkg/apis"
-	"github.com/atomix/controller/pkg/controller"
 	corev1beta1 "github.com/atomix/controller/pkg/controller/atomix/v1beta1"
 	"github.com/atomix/controller/pkg/controller/util/k8s"
-	"github.com/atomix/runtime/pkg/atomix/logging"
+	"github.com/atomix/runtime/pkg/logging"
 	"github.com/go-logr/logr"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"net"
 	"os"
 	"runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -24,8 +20,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
-
-const defaultPort = 5680
 
 var log = logging.GetLogger()
 
@@ -51,7 +45,6 @@ func getCommand() *cobra.Command {
 		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			namespace, _ := cmd.Flags().GetString("namespace")
-			port, _ := cmd.Flags().GetInt("port")
 
 			// Get a config to talk to the apiserver
 			cfg, err := config.GetConfig()
@@ -92,23 +85,6 @@ func getCommand() *cobra.Command {
 				os.Exit(1)
 			}
 
-			server := grpc.NewServer()
-			lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-			if err != nil {
-				log.Error(err)
-				os.Exit(1)
-			}
-
-			controllerv1.RegisterControllerServer(server, controller.NewControllerServer(mgr.GetClient()))
-
-			go func() {
-				log.Info("Starting the Server")
-				if err := server.Serve(lis); err != nil {
-					log.Error(err)
-					os.Exit(1)
-				}
-			}()
-
 			// Start the manager
 			log.Info("Starting the Manager")
 			mgr.GetWebhookServer().Port = 443
@@ -119,7 +95,6 @@ func getCommand() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringP("namespace", "n", "", "the namespace in which to run the controller")
-	cmd.Flags().IntP("port", "p", defaultPort, "the port on which to run the controller server")
 	return cmd
 }
 

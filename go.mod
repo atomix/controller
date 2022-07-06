@@ -3,9 +3,11 @@ module github.com/atomix/controller
 go 1.18
 
 require (
-	github.com/atomix/runtime v0.0.0-20220608081806-5395d17cb060
+	github.com/atomix/proxy v0.0.0-20220706021812-1ee94c6dc73c
+	github.com/atomix/runtime v0.0.0-20220706021412-abbbdcb7235e
 	github.com/go-logr/logr v1.2.0
-	google.golang.org/grpc v1.46.0
+	github.com/spf13/cobra v1.4.0
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	k8s.io/api v0.24.0
 	k8s.io/apimachinery v0.24.0
 	k8s.io/client-go v0.24.0
@@ -15,8 +17,8 @@ require (
 require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/atomix/controller/api v0.0.0-20220610010548-636b80917f18 // indirect
-	github.com/atomix/runtime/api v0.0.0-20220621072755-3d283acc7bf6 // indirect
+	github.com/atomix/proxy/api v0.0.0-20220609194938-8fae92c89d89 // indirect
+	github.com/atomix/runtime/api v0.0.0-20220706021412-abbbdcb7235e // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -35,6 +37,7 @@ require (
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
+	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
@@ -70,11 +73,11 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220407144326-9054f6ed7bac // indirect
+	google.golang.org/grpc v1.46.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	k8s.io/apiextensions-apiserver v0.24.0 // indirect
 	k8s.io/component-base v0.24.0 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect
@@ -84,5 +87,3 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
-
-replace github.com/atomix/controller/api => ./api

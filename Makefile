@@ -6,10 +6,6 @@
 build:
 	RUNTIME_VERSION=$(RUNTIME_VERSION) goreleaser release --snapshot --rm-dist
 
-.PHONY: api
-api:
-	$(MAKE) -C api
-
 reuse-tool: # @HELP install reuse if not present
 	command -v reuse || python3 -m pip install reuse
 

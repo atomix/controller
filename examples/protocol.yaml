@@ -4,32 +4,18 @@ metadata:
   name: example-protocol
 versions:
   - name: v1beta1
-    primitives:
-      - kind: Counter
-        apiVersions:
-          - name: v1
-            service: atomix.counter.v1.Counter
-      - kind: Map
-        apiVersions:
-          - name: v1
-            service: atomix.map.v1.Map
     drivers:
       - runtimeVersion: v0.0.0
         image: atomix/example-driver:v1beta1-runtime0.0.0
+        path: /var/atomix/drivers/example-protocol-v0.0.0.so
       - runtimeVersion: v0.0.1
         image: atomix/example-driver:v1beta1-runtime0.0.1
+        path: /var/atomix/drivers/example-protocol-v0.0.1.so
   - name: v1beta2
-    primitives:
-      - kind: Counter
-        apiVersions:
-          - name: v1
-            service: atomix.counter.v1.Counter
-      - kind: Map
-        apiVersions:
-          - name: v1
-            service: atomix.map.v1.Map
     drivers:
       - runtimeVersion: v0.0.0
         image: atomix/example-driver:v1beta2-runtime0.0.0
+        path: /var/atomix/drivers/example-protocol-v0.0.0.so
       - runtimeVersion: v0.0.1
         image: atomix/example-driver:v1beta2-runtime0.0.1
+        path: /var/atomix/drivers/example-protocol-v0.0.1.so

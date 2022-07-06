@@ -40,6 +40,7 @@ type PrimitiveAPIVersion struct {
 type ProtocolDriver struct {
 	RuntimeVersion string `json:"runtimeVersion"`
 	Image          string `json:"image"`
+	Path           string `json:"path"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -14,7 +14,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"github.com/atomix/controller/pkg/controller/util/k8s"
-	"github.com/atomix/runtime/pkg/atomix/logging"
+	"github.com/atomix/runtime/pkg/logging"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"math/big"
