@@ -13,7 +13,6 @@ import (
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -45,45 +44,13 @@ func addProfileController(mgr manager.Manager) error {
 		return err
 	}
 
-	// Watch for changes to Pods
-	err = c.Watch(&source.Kind{Type: &corev1.Pod{}}, handler.EnqueueRequestsFromMapFunc(func(object client.Object) []reconcile.Request {
-		profileName, ok := object.GetAnnotations()[proxyProfileAnnotation]
-		if !ok {
-			return nil
-		}
-		return []reconcile.Request{
-			{
-				NamespacedName: types.NamespacedName{
-					Namespace: object.GetNamespace(),
-					Name:      profileName,
-				},
-			},
-		}
-	}))
-
-	// Watch for changes to Stores
-	err = c.Watch(&source.Kind{Type: &atomixv1beta1.Store{}}, handler.EnqueueRequestsFromMapFunc(func(object client.Object) []reconcile.Request {
-		profiles := &atomixv1beta1.ProfileList{}
-		if err := mgr.GetClient().List(context.Background(), profiles, nil); err != nil {
-			return nil
-		}
-
-		var requests []reconcile.Request
-		for _, profile := range profiles.Items {
-			for _, binding := range profile.Spec.Bindings {
-				storeNamespace := binding.Store.Namespace
-				if storeNamespace == "" {
-					storeNamespace = profile.Namespace
-				}
-				if storeNamespace == object.GetNamespace() && binding.Store.Name == object.GetName() {
-					requests = append(requests, reconcile.Request{
-						NamespacedName: getNamespacedName(&profile),
-					})
-				}
-			}
-		}
-		return requests
-	}))
+	// Watch for changes to ConfigMap
+	err = c.Watch(&source.Kind{Type: &corev1.ConfigMap{}}, &handler.EnqueueRequestForOwner{
+		OwnerType: &atomixv1beta1.Profile{},
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
