@@ -133,3 +133,44 @@ type ProfileList struct {
 
 	Items []Profile `json:"items"`
 }
+
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// Proxy is a specification for a Proxy resource
+type Proxy struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Pod     corev1.LocalObjectReference `json:"pod"`
+	Profile corev1.LocalObjectReference `json:"profile"`
+	Status  ProxyStatus                 `json:"status"`
+}
+
+type ProxyStatus struct {
+	Ready    bool            `json:"ready"`
+	Bindings []BindingStatus `json:"bindings"`
+}
+
+type BindingState string
+
+const (
+	BindingUnbound BindingState = "Unbound"
+	BindingBound   BindingState = "Bound"
+)
+
+type BindingStatus struct {
+	Name    string       `json:"name"`
+	State   BindingState `json:"state"`
+	Version string       `json:"version"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ProxyList is a list of Proxy resources
+type ProxyList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+
+	Items []Proxy `json:"items"`
+}

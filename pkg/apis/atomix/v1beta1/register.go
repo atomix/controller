@@ -40,6 +40,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion, &Protocol{}, &ProtocolList{})
 	scheme.AddKnownTypes(SchemeGroupVersion, &Store{}, &StoreList{})
 	scheme.AddKnownTypes(SchemeGroupVersion, &Profile{}, &ProfileList{})
+	scheme.AddKnownTypes(SchemeGroupVersion, &Proxy{}, &ProxyList{})
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil
 }
