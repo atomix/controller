@@ -16,6 +16,6 @@ spec:
             - v1
           names:
             - '*'
-          metadata:
+          tags:
             foo: bar
             bar: baz

@@ -75,7 +75,7 @@ spec:
                                   type: array
                                   items:
                                     type: string
-                                metadata:
+                                tags:
                                   type: object
                                   additionalProperties:
                                     type: string
