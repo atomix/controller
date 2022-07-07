@@ -125,7 +125,7 @@ func (r *PodReconciler) Reconcile(ctx context.Context, request reconcile.Request
 		Name:      pod.Name,
 	}
 	proxy := &atomixv1beta1.Proxy{}
-	if err := r.client.Get(ctx, profileNamespacedName, profile); err != nil {
+	if err := r.client.Get(ctx, proxyNamespacedName, proxy); err != nil {
 		if !k8serrors.IsNotFound(err) {
 			log.Error(err)
 			return reconcile.Result{}, err
