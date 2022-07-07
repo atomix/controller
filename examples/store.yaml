@@ -4,8 +4,8 @@ metadata:
   name: example-store
   namespace: default
 spec:
-  protocol:
-    name: example-protocol
+  driver:
+    name: memory
     version: v1beta1
   config:
     foo: bar

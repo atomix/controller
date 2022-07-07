@@ -29,16 +29,14 @@ spec:
                 The specification for the store.
               type: object
               required:
-                - protocol
+                - driver
               properties:
-                protocol:
+                driver:
                   type: object
                   required:
                     - name
                     - version
                   properties:
-                    uid:
-                      type: string
                     name:
                       type: string
                     version:

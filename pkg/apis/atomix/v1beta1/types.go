@@ -13,53 +13,6 @@ import (
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Protocol is a specification for a Protocol resource
-type Protocol struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec ProtocolSpec `json:"spec"`
-}
-
-type ProtocolSpec struct {
-	Versions []ProtocolVersion `json:"versions,omitempty"`
-}
-
-type ProtocolVersion struct {
-	Name       string           `json:"name"`
-	Primitives []PrimitiveKind  `json:"primitives"`
-	Drivers    []ProtocolDriver `json:"drivers"`
-}
-
-type PrimitiveKind struct {
-	Kind        string                `json:"kind"`
-	APIVersions []PrimitiveAPIVersion `json:"apiVersions"`
-}
-
-type PrimitiveAPIVersion struct {
-	Name    string `json:"name"`
-	Service string `json:"service"`
-}
-
-type ProtocolDriver struct {
-	RuntimeVersion string `json:"runtimeVersion"`
-	Image          string `json:"image"`
-	Path           string `json:"path"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// ProtocolList is a list of Protocol resources
-type ProtocolList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
-
-	Items []Protocol `json:"items"`
-}
-
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // Store is a specification for a Store resource
 type Store struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -70,11 +23,11 @@ type Store struct {
 
 // StoreSpec is the spec for a Store resource
 type StoreSpec struct {
-	Protocol ProtocolReference    `json:"protocol"`
-	Config   runtime.RawExtension `json:"config"`
+	Driver Driver               `json:"driver"`
+	Config runtime.RawExtension `json:"config"`
 }
 
-type ProtocolReference struct {
+type Driver struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 }

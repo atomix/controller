@@ -21,7 +21,6 @@ import (
 	"k8s.io/client-go/util/workqueue"
 	"net/http"
 	"os"
-	"path/filepath"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -31,7 +30,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -40,22 +38,18 @@ const (
 	podNamespaceEnv = "POD_NAMESPACE"
 	podNameEnv      = "POD_NAME"
 	nodeIDEnv       = "NODE_ID"
-	profileNameEnv  = "PROFILE_NAME"
 )
 
 const (
-	proxyInjectPath               = "/inject-proxy"
-	proxyInjectAnnotation         = "proxy.atomix.io/inject"
-	proxyInjectStatusAnnotation   = "proxy.atomix.io/status"
-	proxyRuntimeVersionAnnotation = "proxy.atomix.io/runtime-version"
-	proxyDriversAnnotation        = "proxy.atomix.io/drivers"
-	proxyProfileAnnotation        = "proxy.atomix.io/profile"
-	injectedStatus                = "injected"
-	proxyContainerName            = "atomix-proxy"
+	proxyInjectPath             = "/inject-proxy"
+	proxyInjectAnnotation       = "proxy.atomix.io/inject"
+	proxyInjectStatusAnnotation = "proxy.atomix.io/status"
+	proxyProfileAnnotation      = "proxy.atomix.io/profile"
+	injectedStatus              = "injected"
+	proxyContainerName          = "atomix-proxy"
 )
 
 const (
-	runtimeVersionEnv = "RUNTIME_VERSION"
 	proxyImageEnv     = "PROXY_IMAGE"
 	defaultProxyImage = "atomix/proxy:latest"
 )
@@ -297,8 +291,8 @@ func (r *ProxyReconciler) reconcileBinding(ctx context.Context, pod *corev1.Pod,
 						Name:      storeNamespacedName.Name,
 					},
 					DriverID: proxyv1.DriverId{
-						Name:    store.Spec.Protocol.Name,
-						Version: store.Spec.Protocol.Version,
+						Name:    store.Spec.Driver.Name,
+						Version: store.Spec.Driver.Version,
 					},
 					Config: store.Spec.Config.Raw,
 				}
@@ -419,106 +413,20 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 		return admission.Allowed(fmt.Sprintf("'%s' annotation is '%s'", proxyInjectStatusAnnotation, injectedRuntime))
 	}
 
-	var proxyArgs []string
-
-	var driverNames []string
-	runtimeVersion := os.Getenv(runtimeVersionEnv)
-
 	profileName, ok := pod.Annotations[proxyProfileAnnotation]
 	if !ok {
 		log.Warnf("No profile specified for Pod '%s'", request.UID)
-	} else {
-		profile := &atomixv1beta1.Profile{}
-		profileNamespacedName := types.NamespacedName{
-			Namespace: request.Namespace,
-			Name:      profileName,
-		}
-		if err := i.client.Get(ctx, profileNamespacedName, profile); err != nil {
-			log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
-			return admission.Errored(http.StatusInternalServerError, err)
-		}
-
-		for _, binding := range profile.Spec.Bindings {
-			store := &atomixv1beta1.Store{}
-			storeNamespace := binding.Store.Namespace
-			if storeNamespace == "" {
-				storeNamespace = request.Namespace
-			}
-			storeNamespacedName := types.NamespacedName{
-				Namespace: storeNamespace,
-				Name:      binding.Store.Name,
-			}
-			if err := i.client.Get(ctx, storeNamespacedName, store); err != nil {
-				log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
-				return admission.Errored(http.StatusInternalServerError, err)
-			}
-
-			protocol := &atomixv1beta1.Protocol{}
-			protocolNamespacedName := types.NamespacedName{
-				Name: store.Spec.Protocol.Name,
-			}
-			if err := i.client.Get(ctx, protocolNamespacedName, protocol); err != nil {
-				log.Errorf("Runtime injection failed for Pod '%s'", request.UID, err)
-				return admission.Errored(http.StatusInternalServerError, err)
-			}
-
-			var protocolVersion *atomixv1beta1.ProtocolVersion
-			for _, version := range protocol.Spec.Versions {
-				if version.Name == store.Spec.Protocol.Version {
-					protocolVersion = &version
-					break
-				}
-			}
-
-			if protocolVersion == nil {
-				log.Infof("Skipping runtime injection for Pod '%s'", request.UID)
-				return admission.Denied(fmt.Sprintf("Unknown version '%s' for protocol '%s'", store.Spec.Protocol.Version, store.Spec.Protocol.Name))
-			}
-
-			var protocolDriver *atomixv1beta1.ProtocolDriver
-			for _, driver := range protocolVersion.Drivers {
-				if driver.RuntimeVersion == runtimeVersion {
-					protocolDriver = &driver
-					break
-				}
-			}
-
-			if protocolDriver == nil {
-				log.Infof("Skipping runtime injection for Pod '%s'", request.UID)
-				return admission.Denied(fmt.Sprintf("Unknown runtime version '%s' for protocol '%s'", runtimeVersion, store.Spec.Protocol.Name))
-			}
-
-			log.Infof("Injecting Protocol '%s' driver version '%s' into Pod '%s'", protocol.Name, protocolVersion.Name, request.UID)
-			protocolName := fmt.Sprintf("%s-%s", protocol.Name, protocolVersion.Name)
-			driverFile := fmt.Sprintf("%s.so", protocolName)
-			pod.Spec.InitContainers = append(pod.Spec.InitContainers, corev1.Container{
-				Name:  protocolName,
-				Image: protocolDriver.Image,
-				Command: []string{
-					"cp",
-					protocolDriver.Path,
-					filepath.Join("/drivers", driverFile),
-				},
-				VolumeMounts: []corev1.VolumeMount{
-					{
-						Name:      "drivers",
-						MountPath: "/drivers",
-						SubPath:   protocolName,
-					},
-				},
-			})
-
-			proxyArgs = append(proxyArgs, "--driver", filepath.Join("/var/atomix/drivers", protocolVersion.Name))
-		}
+		return admission.Denied(fmt.Sprintf("'%s' annotation not found", proxyProfileAnnotation))
 	}
-
-	proxyArgs = append(proxyArgs, "--config", fmt.Sprintf("/etc/atomix/%s", configFile))
 
 	pod.Spec.Containers = append(pod.Spec.Containers, corev1.Container{
 		Name:            proxyContainerName,
 		Image:           getProxyImage(),
 		ImagePullPolicy: corev1.PullIfNotPresent,
-		Args:            proxyArgs,
+		Args: []string{
+			"--config",
+			fmt.Sprintf("/etc/atomix/%s", configFile),
+		},
 		Env: []corev1.EnvVar{
 			{
 				Name: podIDEnv,
@@ -552,10 +460,6 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 					},
 				},
 			},
-			{
-				Name:  profileNameEnv,
-				Value: profileName,
-			},
 		},
 		Ports: []corev1.ContainerPort{
 			{
@@ -573,11 +477,6 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 				ReadOnly:  true,
 				MountPath: "/etc/atomix",
 			},
-			{
-				Name:      "drivers",
-				ReadOnly:  true,
-				MountPath: "/var/atomix/drivers",
-			},
 		},
 	})
 	pod.Spec.Volumes = append(pod.Spec.Volumes, corev1.Volume{
@@ -590,15 +489,7 @@ func (i *ProxyInjector) Handle(ctx context.Context, request admission.Request) a
 			},
 		},
 	})
-	pod.Spec.Volumes = append(pod.Spec.Volumes, corev1.Volume{
-		Name: "drivers",
-		VolumeSource: corev1.VolumeSource{
-			EmptyDir: &corev1.EmptyDirVolumeSource{},
-		},
-	})
 	pod.Annotations[proxyInjectStatusAnnotation] = injectedStatus
-	pod.Annotations[proxyRuntimeVersionAnnotation] = runtimeVersion
-	pod.Annotations[proxyDriversAnnotation] = strings.Join(driverNames, ",")
 
 	// Marshal the pod and return a patch response
 	marshaledPod, err := json.Marshal(pod)
